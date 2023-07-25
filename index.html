@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <!--Include wheel.js-->
+        <script src="wheel.js"></script>
+    </head>
+    <body>
+        <nav>
+            <h1>Phasmophobia Ghost Casino</h1>
+            <div class="buttons">
+                <button class="resetBTN button" onclick=reset()>Reset page</button>
+                <button class="shareBTN button" onclick=share()>Share</button>
+                <button class="aboutBTN button" onclick=about()>About</button>
+            </div>
+        </nav>
+        <main>
+            <div class="wheel rotate">
+                <canvas>
+                    <p>Sorry, your browser doesn't support canvas. Please try another.</p>
+                </canvas>
+            </div>
+        </main>
+    </body>
+</html>

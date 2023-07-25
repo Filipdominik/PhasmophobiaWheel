@@ -1,0 +1,104 @@
+:root{
+    --main_color: #8bb0f9;
+    --secondary_color: #072d88;
+    --accent_color: #1bc123;
+    --text_color: #fafafa;
+    --background_color: #050505;
+
+    --end_rotation: 3600deg;
+    --start_rotation: 0deg;
+}
+
+*{
+    font-family: 'Signika Negative', sans-serif;
+    color: var(--text_color);
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    background-color: var(--background_color);
+    overflow: hidden;
+}
+
+nav{
+    background-color: var(--secondary_color);
+    height: 10vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+nav > *{
+    margin: 0 20px;
+}
+
+nav > h1{
+    align-self: center;
+    justify-self: left;
+}
+
+.buttons{
+    /*align to the right side*/
+    margin-left: auto;
+}
+
+.button{
+    margin-left: 20px;
+    background-color: var(--accent_color);
+    color: var(--text_color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+main{
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wheel{
+    width: 500px;
+    height: 500px;
+}
+
+.wheel > canvas{
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    background-color: var(--background_color);
+    border-radius: 100%;
+}
+
+.rotate{
+    animation: calmRotation 5s linear infinite;
+    transform-origin: center;
+}
+
+.spin{
+    animation: spinRotation 4s ease-in-out 1 forwards;
+    transform-origin: center;
+}
+
+@keyframes calmRotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+@keyframes spinRotation{
+    from{
+        transform: rotate(--start_rotation);
+    }
+    to{
+        transform: rotate(var(--end_rotation));
+    }
+}
