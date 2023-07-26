@@ -1,4 +1,4 @@
-# Phasmophobia Wheel of Fortune
+# Phasmophobia Ghost Casino
 This is a web based program that let's you select certain evidence or ghosts and roll a wheel to randomly select a ghost.
 This app is deticated to Insym's Ghost Casino
 
