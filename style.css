@@ -3,6 +3,7 @@
     --secondary_color: #072d88;
     --accent_color: #1bc123;
     --text_color: #fafafa;
+    --text_color_hover: #050505;
     --background_color: #050505;
 
     --end_rotation: 3600deg;
@@ -55,6 +56,11 @@ nav > h1{
     cursor: pointer;
 }
 
+.button:hover{
+    background-color: var(--main_color);
+    color: var(--text_color_hover);
+}
+
 main{
     height: 90vh;
     display: flex;
@@ -71,7 +77,7 @@ main{
     height: 100%;
     width: 100%;
     margin: 0px;
-    background-color: var(--background_color);
+    /* background-color: var(--background_color); */
     border-radius: 100%;
 }
 
@@ -101,4 +107,18 @@ main{
     to{
         transform: rotate(var(--end_rotation));
     }
+}
+
+.wheel2{
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    z-index: 5;
+}
+
+.wheel2 > canvas{
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    border-radius: 100%;
 }

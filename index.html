@@ -10,14 +10,19 @@
     </head>
     <body>
         <nav>
-            <h1>Phasmophobia Ghost Casino</h1>
+            <h1 class="title">Phasmophobia Ghost Casino</h1>
             <div class="buttons">
-                <button class="resetBTN button" onclick=reset()>Reset page</button>
-                <button class="shareBTN button" onclick=share()>Share</button>
-                <button class="aboutBTN button" onclick=about()>About</button>
+                <button class="resetBTN button" title="Resets all settings made by the user" onclick=reset()>Reset page</button>
+                <button class="shareBTN button" title="Change the current settings (ghost types and colors)" onclick=changesettings()>Change ghosts</button>
+                <button class="shareBTN button" title="Share the current settings" onclick=share()>Share</button>
+                <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button>
+                <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>About</button>
             </div>
         </nav>
         <main>
+            <div class="wheel2">
+                <canvas></canvas>
+            </div>
             <div class="wheel rotate">
                 <canvas>
                     <p>Sorry, your browser doesn't support canvas. Please try another.</p>
