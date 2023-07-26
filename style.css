@@ -2,12 +2,15 @@
     --main_color: #8bb0f9;
     --secondary_color: #072d88;
     --accent_color: #1bc123;
+    --accent_color_negative: #BF1A2F;
     --text_color: #fafafa;
-    --text_color_hover: #050505;
     --background_color: #050505;
 
     --end_rotation: 3600deg;
     --start_rotation: 0deg;
+    --spin_speed: 5s;
+
+    --circle_size: 90vh;
 }
 
 *{
@@ -23,7 +26,7 @@ body{
 }
 
 nav{
-    background-color: var(--secondary_color);
+    background-color: var(--main_color);
     height: 10vh;
     padding: 10px;
     display: flex;
@@ -56,9 +59,12 @@ nav > h1{
     cursor: pointer;
 }
 
+.remove_ghost{
+    background-color: var(--accent_color_negative); /*More reddish*/
+}
+
 .button:hover{
-    background-color: var(--main_color);
-    color: var(--text_color_hover);
+    background-color: var(--secondary_color);
 }
 
 main{
@@ -69,8 +75,9 @@ main{
 }
 
 .wheel{
-    width: 500px;
-    height: 500px;
+    width: var(--circle_size);
+    height: var(--circle_size);
+    /* background-color: red; */
 }
 
 .wheel > canvas{
@@ -87,7 +94,7 @@ main{
 }
 
 .spin{
-    animation: spinRotation 4s ease-in-out 1 forwards;
+    animation: spinRotation var(--spin_speed) ease-in-out 1 forwards;
     transform-origin: center;
 }
 
@@ -110,10 +117,10 @@ main{
 }
 
 .wheel2{
-    width: 500px;
-    height: 500px;
+    width: var(--circle_size);
+    height: var(--circle_size);
     position: absolute;
-    z-index: 5;
+    z-index: 1;
 }
 
 .wheel2 > canvas{
@@ -121,4 +128,53 @@ main{
     width: 100%;
     margin: 0px;
     border-radius: 100%;
+}
+
+.PopUp{
+    display: none;
+    position: absolute;
+    left: 0;
+    top:0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    cursor: pointer;
+    z-index: 2;
+}
+
+
+.Settings{
+    display: none;
+    /* Center on y-axis and column */
+    background-color: var(--main_color);
+    width: 40vw;
+    height: 80vh;
+    border-radius: 10px;
+    border: 3px solid var(--main_color);
+    box-shadow: 10px 10px var(--secondary_color);
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: space-around; */
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+table{
+    height: 100%;
+    padding: 10px;
+    margin: 10px;
+    text-align: center
+}
+
+.legend > th{
+    border-bottom: 2px solid var(--secondary_color);
+    margin-bottom: 10px;
+}
+
+.setting_buttons{
+    bottom: 10%;
+    margin: 10px;
+    
 }

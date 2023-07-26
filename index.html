@@ -1,33 +1,80 @@
 <!DOCTYPE html>
 <html lang='en'>
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-        <!--Include wheel.js-->
-        <script src="wheel.js"></script>
-    </head>
-    <body>
-        <nav>
-            <h1 class="title">Phasmophobia Ghost Casino</h1>
-            <div class="buttons">
-                <button class="resetBTN button" title="Resets all settings made by the user" onclick=reset()>Reset page</button>
-                <button class="shareBTN button" title="Change the current settings (ghost types and colors)" onclick=changesettings()>Change ghosts</button>
-                <button class="shareBTN button" title="Share the current settings" onclick=share()>Share</button>
-                <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button>
-                <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>About</button>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!--Include wheel.js-->
+    <script src="wheel.js"></script>
+</head>
+
+<body>
+    <nav>
+        <h1 class="title">Phasmophobia Ghost Casino</h1>
+        <div class="buttons">
+            <button class="resetBTN button" title="Resets all settings made by the user" onclick=reset()>Reset
+                page</button>
+            <button class="shareBTN button" title="Change the current settings (ghost types and colors)"
+                onclick=changesettings()>Change ghosts</button>
+            <button class="shareBTN button" title="Share the current settings" onclick=share()>Share</button>
+            <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
+            <button class="aboutBTN button" title="About this page (redirect to github.com)"
+                onclick=about()>About</button>
+        </div>
+    </nav>
+    <main>
+        <div class="wheel2">
+            <canvas></canvas>
+        </div>
+        <div class="wheel rotate">
+            <canvas>
+                <p>Sorry, your browser doesn't support canvas. Please try another.</p>
+            </canvas>
+        </div>
+    </main>
+    <div class="PopUp">
+        <div class="PopUpContent">
+            <h1 class="winning_ghost_text">The winning ghost is ${ghost}!</h1>
+            <div class="Settings">
+                <h1>Settings & Ghost Selection</h1>
+                <!-- table of ghosts -->
+                <table>
+                    <tr class="legend">
+                        <th>Ghost</th>
+                        <th>Color</th>
+                        <th>Text Color</th>
+                        <th>Evidence</th>
+                        <th>Remove</th>
+                    </tr>
+                    <tr class="ghost_entry template">
+                        <td>
+                            <input class="ghost_name" type="text" placeholder="Ghost Name" value=""></input>
+                        </td>
+                        <td>
+                            <input style="cursor:pointer;" type="color" class="ghost_color" value="#0000ff">
+                        </td>
+                        <td>
+                            <input style="cursor:pointer;" type="color" class="text_color" value="#FFFFFF">
+                        </td>
+                        <td>
+                            <button class="evidence_popup button">Change</button>
+                        </td>
+                        <td>
+                            <button class="remove_ghost button">Remove</button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="setting_buttons">
+                    <button class="add_ghost button" onclick="add_ghost()">Add Ghost</button>
+                    <button class="save_settings button" onclick="save_settings()">Save</button>
+                    <button class="button" onclick="HidePopUp()">Cancel changes</button>
+                </div>
+
             </div>
-        </nav>
-        <main>
-            <div class="wheel2">
-                <canvas></canvas>
-            </div>
-            <div class="wheel rotate">
-                <canvas>
-                    <p>Sorry, your browser doesn't support canvas. Please try another.</p>
-                </canvas>
-            </div>
-        </main>
-    </body>
+        </div>
+    </div>
+</body>
+
 </html>
