@@ -137,9 +137,15 @@
                         </td>
                     </tr>
                 </table>
+                <div class="SpinSpeed">
+                    <h3>Change the time the wheel spins (default is 5s)</h3>
+                    <!-- Slider input from 1 to 20 seconds -->
+                    <input type="range" min="1" max="20" value="4" class="TimeSlider"></input>
+                    <p>10s</p>
+                </div>
                 <div class="setting_buttons">
                     <button class="add_ghost button" onclick="add_ghost()">Add Ghost</button>
-                    <button class="save_settings button" onclick="save_settings()">Save</button>
+                    <button class="save_settings button" onclick="SaveSettings()">Save</button>
                     <button class="button" onclick="HidePopUp()">Cancel</button>
                 </div>
             </div>

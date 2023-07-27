@@ -34,13 +34,17 @@ function generateWheel(ghosts) {
     canvas.width = WheelContainer.offsetWidth;
     canvas.height = WheelContainer.offsetHeight;
     const ctx = canvas.getContext("2d");
-
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     const circleDiameter = Math.round(canvas.width * 2 / 5);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     //first loop to check if the ghosts even exist in the ghostsInfo object.
     ghosts.forEach((ghostName, index) => {
+        if (ghostSelection.includes(ghostName) == false){
+            ghostSelection.push(ghostName); 
+        }
         if (ghostsInfo[ghostName] == undefined) {
+            console.log(`Deleted ghost ${ghostName}`);
             //if ghosts doesn't exist, delete it.
             ghosts.splice(index, 1);
         }
@@ -50,7 +54,6 @@ function generateWheel(ghosts) {
 
     ghosts.forEach((ghostName, index) => {
         const ghostInfo = ghostsInfo[ghostName];
-        ghostSelection.push(ghostName);
         const iteration = index; // Segment index for calculations.
 
         ctx.beginPath();
@@ -272,6 +275,7 @@ function spinWheel() {
 function HidePopUp() {
     document.querySelector('.PopUp').style.display = 'none';
     const wheel = document.querySelector('.wheel');
+    generateWheel(ghostSelection);
     wheel.classList.add('rotate');
     wheel.classList.remove('spin');
     setTimeout(function () {
@@ -307,12 +311,12 @@ function changesettings() {
     SettingsElement.style.display = 'flex';
     PopUpElement.style.display = 'flex';
 
-    PopUpElement.onclick = function(event){
+    PopUpElement.onclick = function (event) {
         //set to only close the popup if the background (.PopUp) is clicked.
         if (event.target != event.currentTarget) return;
         HidePopUp();
     };
-    
+
     document.querySelector('main').removeEventListener("click", spinWheel);
     PopUpContentElement.onclick = '';
     WinningGhost_Text.onclick = '';
@@ -366,29 +370,130 @@ function changesettings() {
     accent_color_negative_picker.value = accent_color_negative;
     text_color_picker.value = text_color;
     background_color_picker.value = background_color;
+
+    let TimeSliderElement = PopUpElement.querySelector('.TimeSlider');
+    TimeSliderElement.oninput = function () {
+        TimeSliderElement.parentElement.querySelector('p').innerHTML = `${TimeSliderElement.value}s`;
+    };
+    let SpinTime = RootElement.getPropertyValue('--spin_speed');
+    TimeSliderElement.value = parseInt(SpinTime);
+    TimeSliderElement.parentElement.querySelector('p').innerHTML = `${TimeSliderElement.value}s`;
+}
+
+function SaveSettings() {
+    let PopUpContentElement = document.querySelector('.PopUpContent');
+    let SettingsElement = document.querySelector('.Settings');
+
+    let RootElement = getComputedStyle(document.documentElement);
+    let main_color = RootElement.getPropertyValue('--main_color');
+    let secondary_color = RootElement.getPropertyValue('--secondary_color');
+    let accent_color = RootElement.getPropertyValue('--accent_color');
+    let accent_color_negative = RootElement.getPropertyValue('--accent_color_negative');
+    let text_color = RootElement.getPropertyValue('--text_color');
+    let background_color = RootElement.getPropertyValue('--background_color');
+    let SpinTime = RootElement.getPropertyValue('--spin_speed');
+
+    const confirmElement = document.querySelector('.ConfirmSelectionPopUp');
+    confirmElement.querySelector('h3').innerHTML = `Are you sure you want to apply the new settings?`;
+    confirmElement.querySelector('p').innerHTML = "If you do, you'll need to save the new settings with the Save button in the top right corner";
+
+    confirmElement.querySelector('.SelectionConfirm').onclick = function () {
+        for (let [ghost, data] of Object.entries(ghostsInfo)) {
+            let ghostElement = SettingsElement.querySelector('.' + ghost.replace(' ', '_'));
+            let ghostNameElement = ghostElement.querySelector('.ghost_name');
+            let ghostColorElement = ghostElement.querySelector('.ghost_color');
+            let textColorElement = ghostElement.querySelector('.text_color');
+            let ghostName = ghostNameElement.value;
+            let ghostColor = ghostColorElement.value;
+            let textColor = textColorElement.value;
+
+            let ghostColorStored = data['color'];
+            let textColorStored = data['text_color'];
+            if (ghostColorStored.toLowerCase() != ghostColor.toLowerCase()) {
+                ghostsInfo[ghost]['color'] = ghostColor;
+            }
+
+            if (textColorStored.toLowerCase() != textColor.toLowerCase()) {
+                ghostsInfo[ghost]['text_color'] = textColor;
+            }
+
+            if (ghost != ghostName) {
+                //Finally, if the ghost name is different replace the whole array at the olds array index, 
+                // this way it will be easier for the user to spot changes they made
+
+                //Write the new ghost data to an array while copying over the winning degrees.
+                let NewGhost = { [ghostName]: { color: ghostColor, text_color: textColor, lower_degree: data['lower_degree'], upper_degree: data['upper_degree'] } };
+
+                //find the index of the old ghost data.
+                const indexToReplace = Object.keys(ghostsInfo).indexOf(ghost);
+
+                if (indexToReplace !== -1) {
+                    //When found, delete the old entry
+                    const ghostsArray = Object.entries(ghostsInfo);
+                    ghostsArray.splice(indexToReplace, 1);
+
+                    //Put the new ghost data to the old ghost index.
+                    const newGhostEntry = Object.entries(NewGhost)[0];
+                    ghostsArray.splice(indexToReplace, 0, newGhostEntry);
+
+                    // Convert back to an object
+                    const newGhostsInfo = Object.fromEntries(ghostsArray);
+
+                    // Update the ghostsInfo with the new data
+                    ghostsInfo = newGhostsInfo;
+                }
+
+                //replace the ghostSelection names
+                const indexToReplaceSelection = ghostSelection.indexOf(ghost);
+
+                if (indexToReplaceSelection !== -1) {
+                    // Step 2: Replace the ghost at the found index with the new ghost
+                    ghostSelection.splice(indexToReplace, 1, ghostName);
+                }
+            }
+        }
+        HidePopUp();
+        changesettings();
+        document.querySelector('.Settings').scrollTop = 0;
+        confirmElement.style.display = 'none';
+        setTimeout(function () { generateWheel(ghostSelection) }, 200);
+    }
+    //Read function remove_ghost() for an documentation for this part.
+    confirmElement.querySelector('.SelectionCancel').onclick = function () {
+        confirmElement.style.display = 'none';
+    }
+    confirmElement.style.display = 'flex';
+    confirmElement.style.left = `${mouseX - (confirmElement.clientWidth / 1.9)}px`;
+    confirmElement.style.top = `${mouseY - (confirmElement.clientHeight)}px`;
 }
 
 function remove_ghost(ghost) {
     const confirmElement = document.querySelector('.ConfirmSelectionPopUp');
     confirmElement.querySelector('h3').innerHTML = `Are you sure you want to delete ${ghost} from storage?`;
+    confirmElement.querySelector('p').innerHTML = `This instantly deletes the ghost from local storage.`;
     confirmElement.querySelector('.SelectionConfirm').onclick = function () {
         //Removes a ghost from the ghostInfo object and stores that new object to storage
         delete ghostsInfo[ghost];
+
+        //Delete the ghost from selection:
+        //Get the index of the ghost name in the selection.
+        let IndexToDelete = ghostSelection.indexOf(ghost);
+        ghostSelection.splice(IndexToDelete,IndexToDelete); //Splices from the same index as the to index.
+
         localStorage.setItem('ghosts', JSON.stringify(ghostsInfo));
         let scrollPosition = document.querySelector('.Settings').scrollTop;
-        HidePopUp();
         changesettings();
         document.querySelector('.Settings').scrollTop = scrollPosition;
         confirmElement.style.display = 'none';
     }
-    confirmElement.querySelector('.SelectionCancel').onclick = function(){
+    confirmElement.querySelector('.SelectionCancel').onclick = function () {
         confirmElement.style.display = 'none';
     }
     //First, render the confirm box on the screen to get the dimensions of it.
     confirmElement.style.display = 'flex';
     //Now move the confirm box near the cursor, but a bit to the right side of the screen so that the user can't by accident click on a button.
-    confirmElement.style.left = `${mouseX-(confirmElement.clientWidth/2.5)}px`; //With a divison > 2, right of the cursor. <2, left of the cursor.
-    confirmElement.style.top = `${mouseY-(confirmElement.clientHeight/2)}px`; //The Y is centered on the mouse.
+    confirmElement.style.left = `${mouseX - (confirmElement.clientWidth / 2.5)}px`; //With a divison > 2, right of the cursor. <2, left of the cursor.
+    confirmElement.style.top = `${mouseY - (confirmElement.clientHeight / 2)}px`; //The Y is centered on the mouse.
 }
 
 function CheckForChanges(ParentClassName, ElementClassName) {
@@ -396,8 +501,11 @@ function CheckForChanges(ParentClassName, ElementClassName) {
     let Element = document.querySelector(ParentClassName).querySelector(ElementClassName);
     if (Element.placeholder != Element.value) {
         Element.style.backgroundColor = 'var(--accent_color)';
+        Element.classList.add("changedValue");
     } else {
         Element.style.backgroundColor = 'var(--secondary_color)';
+        Element.classList.remove("changedValue");
+
     }
 }
 
@@ -445,7 +553,7 @@ window.onload = function () {
         generateWheel(ghostSelection);
     } else {
         ghostsInfo = loadGhostTypes();
-        generateWheel(['Banshee', 'Demon', 'Deogen', /* ... */ 'Yokai', 'Yurei']);
+        generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
     }
 
     document.querySelector('main').addEventListener("click", spinWheel);

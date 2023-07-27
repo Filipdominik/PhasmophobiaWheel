@@ -199,3 +199,15 @@ table{
     border: none;
     padding: 5px;
 }
+
+.SpinSpeed{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.SpinSpeed > input{
+    width: 100%;
+    accent-color: var(--accent_color);
+}
