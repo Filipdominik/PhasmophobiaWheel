@@ -16,8 +16,8 @@
         <div class="buttons">
             <button class="resetBTN button" title="Resets all settings made by the user" onclick=reset()>Reset
                 page</button>
-            <button class="shareBTN button" title="Change the current settings (ghost types and colors)"
-                onclick=changesettings()>Change Settings</button>
+            <button class="settingsBTN button" title="Change the current settings (ghost types and colors)">Change
+                Settings</button>
             <button class="shareBTN button" title="Share the current settings" onclick=share()>Share</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
             <button class="aboutBTN button" title="About this page (redirect to github.com)"
@@ -38,6 +38,14 @@
         <div class="PopUpContent">
             <h1 class="winning_ghost_text"></h1>
             <div class="Settings">
+                <div class="ConfirmSelectionPopUp">
+                    <h3>Are you sure you want to delete ${Ghost}?</h3>
+                    <p>This instantly deletes the ghost from local storage</p>
+                    <div style="margin: 5px">
+                        <button class="SelectionConfirm button remove_ghost">Yes</button>
+                        <button class="SelectionCancel button">No</button>
+                    </div>
+                </div>
                 <h1>Settings & Ghost Selection</h1>
                 <!-- table of ghosts -->
                 <table>
@@ -66,72 +74,76 @@
                         </td>
                     </tr>
                 </table>
-                    <h3>Change page colors here:</h3>
-                    <table class="page_colors">
-                        <tr>
-                            <td>Main Color:</td>
-                            <td>
-                                <input class="main_color color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="main_color_revert button" type="button" value="Revert" onclick="RevertColor('main_color')"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Secondary Color:</td>
-                            <td>
-                                <input class="secondary_color color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="secondary_color_revert button" type="button" value="Revert" onclick="RevertColor('secondary_color')"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Accent color:</td>
-                            <td>
-                                <input class="accent_color color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="accent_color_revert button" type="button" value="Revert" onclick="RevertColor('accent_color')"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Accent color negative:</td>
-                            <td>
-                                <input class="accent_color_negative color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="accent_color_negative_revert button" type="button" value="Revert" onclick="RevertColor('accent_color_negative')"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Text color</td>
-                            <td>
-                                <input class="text_color color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="text_color_revert button" type="button" value="Revert" onclick="RevertColor('text_color')"></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Background color:</td>
-                            <td>
-                                <input class="background_color color_picker" type="color"></input>
-                            </td>
-                            <td>
-                                <input class="background_color_revert button" type="button" value="Revert" onclick="RevertColor('background_color')"></input>
-                            </td>
-                        </tr>
-                    </table>
+                <h3>Change page colors here:</h3>
+                <table class="page_colors">
+                    <tr>
+                        <td>Main Color:</td>
+                        <td>
+                            <input class="main_color color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="main_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('main_color')"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Secondary Color:</td>
+                        <td>
+                            <input class="secondary_color color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="secondary_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('secondary_color')"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Accent color:</td>
+                        <td>
+                            <input class="accent_color color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="accent_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('accent_color')"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Accent color negative:</td>
+                        <td>
+                            <input class="accent_color_negative color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="accent_color_negative_revert button" type="button" value="Revert"
+                                onclick="RevertColor('accent_color_negative')"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Text color</td>
+                        <td>
+                            <input class="text_color color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="text_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('text_color')"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Background color:</td>
+                        <td>
+                            <input class="background_color color_picker" type="color"></input>
+                        </td>
+                        <td>
+                            <input class="background_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('background_color')"></input>
+                        </td>
+                    </tr>
+                </table>
                 <div class="setting_buttons">
                     <button class="add_ghost button" onclick="add_ghost()">Add Ghost</button>
                     <button class="save_settings button" onclick="save_settings()">Save</button>
-                    <button class="button" onclick="HidePopUp()">Cancel changes</button>
+                    <button class="button" onclick="HidePopUp()">Cancel</button>
                 </div>
-
             </div>
         </div>
     </div>
 </body>
-
 </html>

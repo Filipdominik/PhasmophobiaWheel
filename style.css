@@ -161,6 +161,18 @@ main{
     overflow-y: scroll;
 }
 
+.ConfirmSelectionPopUp{
+    position: absolute;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 5px 5px var(--secondary_color);
+    border: 3px solid var(--secondary_color);
+    background-color: var(--main_color);
+}
+
 table{
     height: 100%;
     padding: 10px;

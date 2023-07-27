@@ -1,69 +1,108 @@
-var ghostsInfo;
+let ghostsInfo;
 let ghostSelection = [];
+let [mouseX, mouseY] = [];
+// Utility Functions
+function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
+    let deltaX = Math.cos(piValue) * circlediameter;
+    let deltaY = Math.sin(piValue) * circlediameter;
+    return [deltaX + zeroPoint[0], deltaY + zeroPoint[1]];
+}
+
+function getRotationAngle(target) {
+    const obj = window.getComputedStyle(document.querySelector(target), null);
+    const matrix = obj.getPropertyValue('transform');
+    var values = matrix.split('(')[1];
+    let [a, b] = values.split(')')[0].split(',');
+    var angle = Math.atan2(b, a) * (180 / Math.PI);
+    angle = Math.round((angle < 0 ? angle + 360 : angle) * 100) / 100;
+    return angle;
+}
+
+function base64ToBytes(base64) {
+    const binString = atob(base64);
+    return Uint8Array.from(binString, (m) => m.codePointAt(0));
+}
+
+function bytesToBase64(bytes) {
+    const binString = Array.from(bytes, (x) => String.fromCodePoint(x)).join("");
+    return btoa(binString);
+}
+
 function generateWheel(ghosts) {
     const WheelContainer = document.querySelector('.wheel');
     const canvas = WheelContainer.children[0];
     canvas.width = WheelContainer.offsetWidth;
     canvas.height = WheelContainer.offsetHeight;
     const ctx = canvas.getContext("2d");
-    // ghostsInfo = 
-    let [centerX, centerY] = [canvas.width / 2, canvas.height / 2];
-    let circleDiameter = Math.round(canvas.width * 2 / 5);
-    let segmentSize = (2 * Math.PI) * 1 / ghosts.length;
 
-    ghosts.forEach((ghostName) => {
+    const circleDiameter = Math.round(canvas.width * 2 / 5);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    //first loop to check if the ghosts even exist in the ghostsInfo object.
+    ghosts.forEach((ghostName, index) => {
+        if (ghostsInfo[ghostName] == undefined) {
+            //if ghosts doesn't exist, delete it.
+            ghosts.splice(index, 1);
+        }
+    });
+    //and then calculate the segment size for each ghost.
+    const segmentSize = (2 * Math.PI) * 1 / ghosts.length;
+
+    ghosts.forEach((ghostName, index) => {
+        const ghostInfo = ghostsInfo[ghostName];
         ghostSelection.push(ghostName);
-        let iteration = ghosts.indexOf(ghostName); //checks which segment is currently being drawn as a number, used for further calculations of coordinates and correct rotation.
-        ctx.beginPath();
-        ctx.fillStyle = ghostsInfo[ghostName]['color']; //selects the corresponding ghost color as the fill color
-        ctx.arc(centerX, centerY, circleDiameter, segmentSize * iteration, segmentSize * (iteration + 1)); //draws an arc, from the outter point
+        const iteration = index; // Segment index for calculations.
 
-        ctx.moveTo(centerX, centerY); //move to center to draw the inner triangle
-        let first_corner = CalculateCoordinates(segmentSize * iteration, circleDiameter, [centerX, centerY]);
-        let second_corner = CalculateCoordinates(segmentSize * (iteration + 1), circleDiameter, [centerX, centerY]);
+        ctx.beginPath();
+        ctx.fillStyle = ghostInfo['color'];
+        ctx.arc(centerX, centerY, circleDiameter, segmentSize * iteration, segmentSize * (iteration + 1));
+
+        ctx.moveTo(centerX, centerY);
+        const first_corner = CalculateCoordinates(segmentSize * iteration, circleDiameter, [centerX, centerY]);
+        const second_corner = CalculateCoordinates(segmentSize * (iteration + 1), circleDiameter, [centerX, centerY]);
         ctx.lineTo(first_corner[0], first_corner[1]);
         ctx.lineTo(second_corner[0], second_corner[1]);
         ctx.fill();
 
-        //Rounds to 0.00 for more precisision, dont need anymore.
-        let [lowerDegree, upperDegree] = [Math.round(segmentSize * iteration * (180 / Math.PI) * 100) / 100, Math.round(segmentSize * (iteration + 1) * (180 / Math.PI) * 100) / 100];
-        ghostsInfo[ghostName]['lower_degree'] = lowerDegree;
-        ghostsInfo[ghostName]['upper_degree'] = upperDegree;
-        let piValueInBetween = ((segmentSize * iteration) + (segmentSize * (iteration + 1))) / 2; //Calculates the point on the circle which is the center of the segment
-        let [x, y] = CalculateCoordinates(piValueInBetween, circleDiameter / 1.4, [centerX, centerY]); //Calculates the center of the segment
+        const lowerDegree = Math.round(segmentSize * iteration * (180 / Math.PI) * 100) / 100;
+        const upperDegree = Math.round(segmentSize * (iteration + 1) * (180 / Math.PI) * 100) / 100;
+        ghostInfo['lower_degree'] = lowerDegree;
+        ghostInfo['upper_degree'] = upperDegree;
+        const piValueInBetween = (segmentSize * iteration + segmentSize * (iteration + 1)) / 2;
+        const [x, y] = CalculateCoordinates(piValueInBetween, circleDiameter / 1.4, [centerX, centerY]);
 
-        //draw text
         ctx.save();
-        ctx.fillStyle = ghostsInfo[ghostName]['text_color'];
+        ctx.fillStyle = ghostInfo['text_color'];
         ctx.textAlign = 'center';
-        if (ghosts.length < 10) {
-            ctx.font = '30px Signika Negative';
-        }
-        else {
-            ctx.font = '20px Signika Negative';
-        }
+        ctx.font = ghosts.length < 10 ? '30px Signika Negative' : '20px Signika Negative';
         ctx.translate(x, y);
         ctx.rotate(piValueInBetween);
         ctx.fillText(ghostName, 0, 10);
         ctx.restore();
     });
 
-    //draw the needle
+    // Draw the needle
     const NeedleContainer = document.querySelector('.wheel2');
     const NeedleCanvas = NeedleContainer.children[0];
     NeedleCanvas.width = NeedleContainer.offsetWidth;
     NeedleCanvas.height = NeedleContainer.offsetHeight;
     const nCtx = NeedleCanvas.getContext("2d");
+
     nCtx.beginPath();
     nCtx.fillStyle = 'grey';
 
-    let [x, y] = [NeedleCanvas.width, NeedleCanvas.height];
-    [xStart, yStart, xEnd, yEnd] = [Math.round(x / 2) - 20, Math.round(y * 0.08), Math.round(x / 2) + 20, Math.round(y * 0.15)];
+    const [x, y] = [NeedleCanvas.width, NeedleCanvas.height];
+    const xStart = Math.round(x / 2) - 20;
+    const yStart = Math.round(y * 0.08);
+    const xEnd = Math.round(x / 2) + 20;
+    const yEnd = Math.round(y * 0.15);
+
     nCtx.moveTo(xStart, yStart);
     nCtx.lineTo(Math.round((xStart + xEnd) / 2), yEnd);
     nCtx.lineTo(xEnd, yStart);
     nCtx.lineTo(xStart, yStart);
     nCtx.fill();
+
     nCtx.beginPath();
     nCtx.strokeStyle = 'DarkSlateGrey';
     nCtx.moveTo(xStart, yStart);
@@ -73,11 +112,6 @@ function generateWheel(ghosts) {
     nCtx.stroke();
 }
 
-function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
-    let deltaX = Math.cos(piValue) * circlediameter;
-    let deltaY = Math.sin(piValue) * circlediameter;
-    return [deltaX + zeroPoint[0], deltaY + zeroPoint[1]];
-}
 
 function loadGhostTypes() {
     let storedData = localStorage.getItem('ghosts');
@@ -88,30 +122,102 @@ function loadGhostTypes() {
         return parsedData
     }
     ghostsInfo = {
-        Banshee: { color: "#6600cc", text_color: "#FFFFFF"},
-        Demon: { color: "#990000", text_color: "#FF0000"},
-        Deogen: { color: "#ffcc00", text_color: "#000000"},
-        Goryo: { color: "#66ff99", text_color: "#FFFFFF"},
-        Hantu: { color: "#3399ff", text_color: "#FFFFFF"},
-        Jinn: { color: "#ff9900", text_color: "#FFFF00"},
-        Mare: { color: "#993333", text_color: "#FFFFFF"},
-        Moroi: { color: "#cc00cc", text_color: "#FFFFFF"},
-        Myling: { color: "#ccffcc", text_color: "#000000"},
-        Obake: { color: "#ffcc99", text_color: "#FFFFFF"},
-        Oni: { color: "#cc6600", text_color: "#FFA500"},
-        Onryo: { color: "#ff3366", text_color: "#FFFFFF"},
-        Phantom: { color: "#6666ff", text_color: "#FFFFFF"},
-        Poltergeist: { color: "#00ccff", text_color: "#000000"},
-        Raiju: { color: "#33cc33", text_color: "#FFFFFF"},
-        Revenant: { color: "#9900cc", text_color: "#FF0000"},
-        Shade: { color: "#666666", text_color: "#FFFFFF"},
-        Spirit: { color: "#99ccff", text_color: "#000000"},
-        Thaye: { color: "#ff6666", text_color: "#FFFFFF"},
-        "The Mimic": { color: "#9966ff", text_color: "#FFFFFF"},
-        "The Twins": { color: "#ff99cc", text_color: "#000000"},
-        Wraith: { color: "#00ffcc", text_color: "#000000"},
-        Yokai: { color: "#ff3399", text_color: "#FFFFFF"},
-        Yurei: { color: "#9999ff", text_color: "#FFFFFF"}
+        Banshee: {
+            color: "#6600cc",
+            text_color: "#FFFFFF"
+        },
+        Demon: {
+            color: "#990000",
+            text_color: "#FF0000"
+        },
+        Deogen: {
+            color: "#ffcc00",
+            text_color: "#000000"
+        },
+        Goryo: {
+            color: "#66ff99",
+            text_color: "#FFFFFF"
+        },
+        Hantu: {
+            color: "#3399ff",
+            text_color: "#FFFFFF"
+        },
+        Jinn: {
+            color: "#ff9900",
+            text_color: "#FFFF00"
+        },
+        Mare: {
+            color: "#993333",
+            text_color: "#FFFFFF"
+        },
+        Moroi: {
+            color: "#cc00cc",
+            text_color: "#FFFFFF"
+        },
+        Myling: {
+            color: "#ccffcc",
+            text_color: "#000000"
+        },
+        Obake: {
+            color: "#ffcc99",
+            text_color: "#FFFFFF"
+        },
+        Oni: {
+            color: "#cc6600",
+            text_color: "#FFA500"
+        },
+        Onryo: {
+            color: "#ff3366",
+            text_color: "#FFFFFF"
+        },
+        Phantom: {
+            color: "#6666ff",
+            text_color: "#FFFFFF"
+        },
+        Poltergeist: {
+            color: "#00ccff",
+            text_color: "#000000"
+        },
+        Raiju: {
+            color: "#33cc33",
+            text_color: "#FFFFFF"
+        },
+        Revenant: {
+            color: "#9900cc",
+            text_color: "#FF0000"
+        },
+        Shade: {
+            color: "#666666",
+            text_color: "#FFFFFF"
+        },
+        Spirit: {
+            color: "#99ccff",
+            text_color: "#000000"
+        },
+        Thaye: {
+            color: "#ff6666",
+            text_color: "#FFFFFF"
+        },
+        "The Mimic": {
+            color: "#9966ff",
+            text_color: "#FFFFFF"
+        },
+        "The Twins": {
+            color: "#ff99cc",
+            text_color: "#000000"
+        },
+        Wraith: {
+            color: "#00ffcc",
+            text_color: "#000000"
+        },
+        Yokai: {
+            color: "#ff3399",
+            text_color: "#FFFFFF"
+        },
+        Yurei: {
+            color: "#9999ff",
+            text_color: "#FFFFFF"
+        }
     };
 
     localStorage.setItem('ghosts', JSON.stringify(ghostsInfo));
@@ -162,6 +268,7 @@ function spinWheel() {
     wheel.classList.remove('rotate');
     wheel.classList.add('spin');
 }
+
 function HidePopUp() {
     document.querySelector('.PopUp').style.display = 'none';
     const wheel = document.querySelector('.wheel');
@@ -182,32 +289,13 @@ function changeToPosition(toPosition) {
     document.documentElement.style.setProperty('--end_rotation', `${toPosition}deg`);
 }
 
-function getRotationAngle(target) {
-    //thanks to https://css-tricks.com/get-value-of-css-rotation-through-javascript/
-    //Converts the rotation matrix of the object to the angle in 2 decimal points.
-
-    //Get the computed style of the requested object
-    const obj = window.getComputedStyle(document.querySelector(target), null);
-    //Get the rotation matrix
-    const matrix = obj.getPropertyValue('transform');
-
-    //Extract the interesting data out of the matrix
-    var values = matrix.split('(')[1];
-    let [a, b] = values.split(')')[0].split(',');
-
-    //Convert it to degrees
-    var angle = Math.atan2(b, a) * (180 / Math.PI);
-    angle = Math.round((angle < 0 ? angle + 360 : angle) * 100) / 100;
-    return angle;
-}
-
 function reset() {
     //Resets the settings made in the URL and localstorage and refreshes the page.
     localStorage.clear();
     document.location.search = '';
 }
 
-function changesettings(){
+function changesettings() {
     //Opens the settings window, currently not using any JS framework. I know that it's dumb.
     // When I'll need to rewrite this code at any point,
     //I will be using React, as I'm most familiar with that.
@@ -219,45 +307,51 @@ function changesettings(){
     SettingsElement.style.display = 'flex';
     PopUpElement.style.display = 'flex';
 
-    PopUpElement.onclick = '';
+    PopUpElement.onclick = function(event){
+        //set to only close the popup if the background (.PopUp) is clicked.
+        if (event.target != event.currentTarget) return;
+        HidePopUp();
+    };
+    
     document.querySelector('main').removeEventListener("click", spinWheel);
     PopUpContentElement.onclick = '';
     WinningGhost_Text.onclick = '';
     PopUpElement.style.cursor = 'default';
-
-    const tableElement = SettingsElement.querySelector('table');
-    const template = tableElement.querySelector('.template');
-    for (const [ghost, info] of Object.entries(ghostsInfo)) {
+    let tableElement = SettingsElement.querySelector('table');
+    let template = tableElement.querySelector('.template');
+    template.style.display = 'table-row'
+    //delete all the children of the table, except the template.
+    while (tableElement.children.length > 1) {
+        tableElement.removeChild(tableElement.lastChild);
+    }
+    for (let [ghost, info] of Object.entries(ghostsInfo)) {
         let duped_element = template.cloneNode(true);
         duped_element.querySelector('.ghost_name').value = ghost;
         duped_element.querySelector('.ghost_name').placeholder = ghost;
-        duped_element.querySelector('.ghost_name').addEventListener('change', function(){CheckForChanges('.'+ghost,'.ghost_name')});
+        duped_element.querySelector('.ghost_name').addEventListener('change', function () {
+            CheckForChanges('.' + ghost, '.ghost_name')
+        });
         duped_element.querySelector('.ghost_color').value = info['color'];
         duped_element.querySelector('.text_color').value = info['text_color'];
-        duped_element.querySelector('.evidence_popup').addEventListener('click', function() {show_evidence(ghost)});
-        duped_element.querySelector('.remove_ghost').addEventListener('click', function() {remove_ghost(ghost)});
-        duped_element.classList.add(ghost.replace(' ','_')); //Classnames can't have spaces in them.
+        duped_element.querySelector('.evidence_popup').addEventListener('click', function () {
+            show_evidence(ghost)
+        });
+        duped_element.querySelector('.remove_ghost').addEventListener('click', function () {
+            remove_ghost(ghost);
+        });
+        duped_element.classList.add(ghost.replace(' ', '_')); //Classnames can't have spaces in them.
+        duped_element.classList.remove('template');
+        duped_element.style.display = 'table-row';
         tableElement.appendChild(duped_element);
     }
     template.style.display = 'none';
     //Show page colors in the color selection:
-    var pageColorsElement = document.querySelector('.page_colors');
+    let pageColorsElement = document.querySelector('.page_colors');
     //read the elements
-    let [main_color_picker,secondary_color_picker,accent_color_picker,accent_color_negative_picker,text_color_picker,background_color_picker] = pageColorsElement.querySelectorAll('.color_picker');
+    let [main_color_picker, secondary_color_picker, accent_color_picker, accent_color_negative_picker, text_color_picker, background_color_picker] = pageColorsElement.querySelectorAll('.color_picker');
     //read the current color values.
     let RootElement = getComputedStyle(document.documentElement);
-    // --main_color: #8bb0f9;
-    // --secondary_color: #072d88;
-    // --accent_color: #1bc123;
-    // --accent_color_negative: #BF1A2F;
-    // --text_color: #fafafa;
-    // --background_color: #050505;
 
-    // --end_rotation: 3600deg;
-    // --start_rotation: 0deg;
-    // --spin_speed: 5s;
-
-    // --circle_size: 90vh;
     let main_color = RootElement.getPropertyValue('--main_color');
     let secondary_color = RootElement.getPropertyValue('--secondary_color');
     let accent_color = RootElement.getPropertyValue('--accent_color');
@@ -274,20 +368,42 @@ function changesettings(){
     background_color_picker.value = background_color;
 }
 
-function CheckForChanges(ParentClassName,ElementClassName){
+function remove_ghost(ghost) {
+    const confirmElement = document.querySelector('.ConfirmSelectionPopUp');
+    confirmElement.querySelector('h3').innerHTML = `Are you sure you want to delete ${ghost} from storage?`;
+    confirmElement.querySelector('.SelectionConfirm').onclick = function () {
+        //Removes a ghost from the ghostInfo object and stores that new object to storage
+        delete ghostsInfo[ghost];
+        localStorage.setItem('ghosts', JSON.stringify(ghostsInfo));
+        let scrollPosition = document.querySelector('.Settings').scrollTop;
+        HidePopUp();
+        changesettings();
+        document.querySelector('.Settings').scrollTop = scrollPosition;
+        confirmElement.style.display = 'none';
+    }
+    confirmElement.querySelector('.SelectionCancel').onclick = function(){
+        confirmElement.style.display = 'none';
+    }
+    //First, render the confirm box on the screen to get the dimensions of it.
+    confirmElement.style.display = 'flex';
+    //Now move the confirm box near the cursor, but a bit to the right side of the screen so that the user can't by accident click on a button.
+    confirmElement.style.left = `${mouseX-(confirmElement.clientWidth/2.5)}px`; //With a divison > 2, right of the cursor. <2, left of the cursor.
+    confirmElement.style.top = `${mouseY-(confirmElement.clientHeight/2)}px`; //The Y is centered on the mouse.
+}
+
+function CheckForChanges(ParentClassName, ElementClassName) {
     //Checks if the value of the box is different from the default (placeholder) value, and shows a different color.
     let Element = document.querySelector(ParentClassName).querySelector(ElementClassName);
-    if (Element.placeholder != Element.value){
-        Element.style.backgroundColor = 'var(--accent_color)';  
-    }
-    else{
-        Element.style.backgroundColor = 'var(--secondary_color)';  
+    if (Element.placeholder != Element.value) {
+        Element.style.backgroundColor = 'var(--accent_color)';
+    } else {
+        Element.style.backgroundColor = 'var(--secondary_color)';
     }
 }
 
-function share(){
+function share() {
     WriteParameters();
-    alert("Copy the complete URL to share your settings!")
+    alert("Copy the complete URL to share your settings!");
 }
 
 function about() {
@@ -319,29 +435,17 @@ function WriteParameters() {
     const base64dGS = bytesToBase64(encodedGS)
     USP.set('selection', base64dGS);
     document.location.search = USP.toString();
-    console.log(USP.toString().length);
-}
-
-function base64ToBytes(base64) {
-    const binString = atob(base64);
-    return Uint8Array.from(binString, (m) => m.codePointAt(0));
-}
-
-function bytesToBase64(bytes) {
-    const binString = Array.from(bytes, (x) => String.fromCodePoint(x)).join("");
-    return btoa(binString);
 }
 
 window.onload = function () {
     if (document.location.search.length > 2) {
-        let [data,selection] = ReadParameters();
+        let [data, selection] = ReadParameters();
         ghostsInfo = JSON.parse(data);
         ghostSelection = JSON.parse(selection);
         generateWheel(ghostSelection);
-    }
-    else {
-        loadGhostTypes();
-        generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
+    } else {
+        ghostsInfo = loadGhostTypes();
+        generateWheel(['Banshee', 'Demon', 'Deogen', /* ... */ 'Yokai', 'Yurei']);
     }
 
     document.querySelector('main').addEventListener("click", spinWheel);
@@ -350,5 +454,10 @@ window.onload = function () {
             spinWheel();
         }
     }
-    // setInterval(function () { getRotationAngle('.wheel') }, 100); //debuging
-}
+    document.querySelector('.settingsBTN').onclick = changesettings;
+    window.onmousemove = function (event) {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }
+    // setInterval(function () { getRotationAngle('.wheel') }, 100); //debugging
+};
