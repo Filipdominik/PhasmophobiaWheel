@@ -159,14 +159,14 @@ function spinWheel() {
         }
     }
     changeToPosition(Rotation);
-    wheel.classList.toggle('rotate');
-    wheel.classList.toggle('spin');
+    wheel.classList.remove('rotate');
+    wheel.classList.add('spin');
 }
 function HidePopUp() {
     document.querySelector('.PopUp').style.display = 'none';
     const wheel = document.querySelector('.wheel');
-    wheel.classList.toggle('rotate');
-    wheel.classList.toggle('spin');
+    wheel.classList.add('rotate');
+    wheel.classList.remove('spin');
     setTimeout(function () {
         document.querySelector('main').addEventListener("click", spinWheel);
         document.onkeydown = function (key) {
@@ -208,6 +208,9 @@ function reset() {
 }
 
 function changesettings(){
+    //Opens the settings window, currently not using any JS framework. I know that it's dumb.
+    // When I'll need to rewrite this code at any point,
+    //I will be using React, as I'm most familiar with that.
     let PopUpElement = document.querySelector('.PopUp');
     let PopUpContentElement = document.querySelector('.PopUpContent');
     let SettingsElement = document.querySelector('.Settings');
@@ -227,14 +230,59 @@ function changesettings(){
     for (const [ghost, info] of Object.entries(ghostsInfo)) {
         let duped_element = template.cloneNode(true);
         duped_element.querySelector('.ghost_name').value = ghost;
+        duped_element.querySelector('.ghost_name').placeholder = ghost;
+        duped_element.querySelector('.ghost_name').addEventListener('change', function(){CheckForChanges('.'+ghost,'.ghost_name')});
         duped_element.querySelector('.ghost_color').value = info['color'];
         duped_element.querySelector('.text_color').value = info['text_color'];
         duped_element.querySelector('.evidence_popup').addEventListener('click', function() {show_evidence(ghost)});
         duped_element.querySelector('.remove_ghost').addEventListener('click', function() {remove_ghost(ghost)});
-        duped_element.classList.add(ghost.replace(' ','_'));
+        duped_element.classList.add(ghost.replace(' ','_')); //Classnames can't have spaces in them.
         tableElement.appendChild(duped_element);
     }
+    template.style.display = 'none';
+    //Show page colors in the color selection:
+    var pageColorsElement = document.querySelector('.page_colors');
+    //read the elements
+    let [main_color_picker,secondary_color_picker,accent_color_picker,accent_color_negative_picker,text_color_picker,background_color_picker] = pageColorsElement.querySelectorAll('.color_picker');
+    //read the current color values.
+    let RootElement = getComputedStyle(document.documentElement);
+    // --main_color: #8bb0f9;
+    // --secondary_color: #072d88;
+    // --accent_color: #1bc123;
+    // --accent_color_negative: #BF1A2F;
+    // --text_color: #fafafa;
+    // --background_color: #050505;
 
+    // --end_rotation: 3600deg;
+    // --start_rotation: 0deg;
+    // --spin_speed: 5s;
+
+    // --circle_size: 90vh;
+    let main_color = RootElement.getPropertyValue('--main_color');
+    let secondary_color = RootElement.getPropertyValue('--secondary_color');
+    let accent_color = RootElement.getPropertyValue('--accent_color');
+    let accent_color_negative = RootElement.getPropertyValue('--accent_color_negative');
+    let text_color = RootElement.getPropertyValue('--text_color');
+    let background_color = RootElement.getPropertyValue('--background_color');
+
+    //set the values
+    main_color_picker.value = main_color;
+    secondary_color_picker.value = secondary_color;
+    accent_color_picker.value = accent_color;
+    accent_color_negative_picker.value = accent_color_negative;
+    text_color_picker.value = text_color;
+    background_color_picker.value = background_color;
+}
+
+function CheckForChanges(ParentClassName,ElementClassName){
+    //Checks if the value of the box is different from the default (placeholder) value, and shows a different color.
+    let Element = document.querySelector(ParentClassName).querySelector(ElementClassName);
+    if (Element.placeholder != Element.value){
+        Element.style.backgroundColor = 'var(--accent_color)';  
+    }
+    else{
+        Element.style.backgroundColor = 'var(--secondary_color)';  
+    }
 }
 
 function share(){

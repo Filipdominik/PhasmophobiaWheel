@@ -173,8 +173,17 @@ table{
     margin-bottom: 10px;
 }
 
+.page_colors{
+    width: 70%;
+}
+
 .setting_buttons{
     bottom: 10%;
     margin: 10px;
-    
+}
+
+.ghost_name{
+    background-color: var(--secondary_color);
+    border: none;
+    padding: 5px;
 }
