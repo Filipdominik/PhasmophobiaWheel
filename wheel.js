@@ -34,14 +34,14 @@ function generateWheel(ghosts) {
     canvas.width = WheelContainer.offsetWidth;
     canvas.height = WheelContainer.offsetHeight;
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const circleDiameter = Math.round(canvas.width * 2 / 5);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     //first loop to check if the ghosts even exist in the ghostsInfo object.
     ghosts.forEach((ghostName, index) => {
-        if (ghostSelection.includes(ghostName) == false){
-            ghostSelection.push(ghostName); 
+        if (ghostSelection.includes(ghostName) == false) {
+            ghostSelection.push(ghostName);
         }
         if (ghostsInfo[ghostName] == undefined) {
             console.log(`Deleted ghost ${ghostName}`);
@@ -242,7 +242,7 @@ function spinWheel() {
     var randomDegrees = Math.random() * 360;
     var Rotation = 3600 + randomDegrees;
     const WinningDegree = (1.5 * Math.PI) * (180 / Math.PI);
-    var spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replace('s', '000'));
+    var spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
 
     for (const [ghost, info] of Object.entries(ghostsInfo)) {
         var [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
@@ -317,24 +317,34 @@ function changesettings() {
         HidePopUp();
     };
 
+    //Clear the event listeners.
     document.querySelector('main').removeEventListener("click", spinWheel);
     PopUpContentElement.onclick = '';
     WinningGhost_Text.onclick = '';
+    document.onkeydown = function (key) {
+        if (key.key == ' ') {
+        }
+    }
+
     PopUpElement.style.cursor = 'default';
     let tableElement = SettingsElement.querySelector('table');
     let template = tableElement.querySelector('.template');
     template.style.display = 'table-row'
-    //delete all the children of the table, except the template.
+
+    //Clear the table except the template.
     while (tableElement.children.length > 1) {
         tableElement.removeChild(tableElement.lastChild);
     }
+
     for (let [ghost, info] of Object.entries(ghostsInfo)) {
         let duped_element = template.cloneNode(true);
-        duped_element.querySelector('.ghost_name').value = ghost;
-        duped_element.querySelector('.ghost_name').placeholder = ghost;
+        ghost = ghost.trim();
+        duped_element.querySelector('.ghost_name').value = ghost.replaceAll('_', ' ');
+        duped_element.querySelector('.ghost_name').placeholder = ghost.replaceAll('_', ' ');
         duped_element.querySelector('.ghost_name').addEventListener('change', function () {
-            CheckForChanges('.' + ghost, '.ghost_name')
+            CheckForChanges('.' + ghost.replaceAll(' ', '_'), '.ghost_name')
         });
+
         duped_element.querySelector('.ghost_color').value = info['color'];
         duped_element.querySelector('.text_color').value = info['text_color'];
         duped_element.querySelector('.evidence_popup').addEventListener('click', function () {
@@ -343,9 +353,16 @@ function changesettings() {
         duped_element.querySelector('.remove_ghost').addEventListener('click', function () {
             remove_ghost(ghost);
         });
-        duped_element.classList.add(ghost.replace(' ', '_')); //Classnames can't have spaces in them.
+
+        duped_element.classList.add(ghost.trim().replaceAll(' ', '_')); //Classnames can't have spaces in them.
         duped_element.classList.remove('template');
         duped_element.style.display = 'table-row';
+
+        if (ghost.includes('New Ghost')) {
+            duped_element.querySelector('.ghost_name').style.backgroundColor = 'var(--accent_color)';
+            duped_element.querySelector('.ghost_name').classList.add("changedValue");
+        }
+
         tableElement.appendChild(duped_element);
     }
     template.style.display = 'none';
@@ -408,33 +425,33 @@ function SaveSettings() {
         let TimeSliderElement = PopUpContentElement.querySelector('.TimeSlider');
 
         let RootElement = document.documentElement.style;
-        if (main_color.toLowerCase() != main_color_picked.toLowerCase()){
-            RootElement.setProperty('--main_color',main_color_picked);
+        if (main_color.toLowerCase() != main_color_picked.toLowerCase()) {
+            RootElement.setProperty('--main_color', main_color_picked);
         }
 
-        if (secondary_color.toLowerCase() != secondary_color_picked.toLowerCase()){
+        if (secondary_color.toLowerCase() != secondary_color_picked.toLowerCase()) {
             RootElement.setProperty('--secondary_color', secondary_color_picked);
         }
-        if (accent_color.toLowerCase() != accent_color_picked.toLowerCase()){
+        if (accent_color.toLowerCase() != accent_color_picked.toLowerCase()) {
             RootElement.setProperty('--accent_color', accent_color_picked);
         }
-        if (accent_color_negative.toLowerCase() != accent_color_negative_picked.toLowerCase()){
+        if (accent_color_negative.toLowerCase() != accent_color_negative_picked.toLowerCase()) {
             RootElement.setProperty('--accent_color_negative', accent_color_negative_picked);
         }
-        if (text_color.toLowerCase() != text_color_picked.toLowerCase()){
+        if (text_color.toLowerCase() != text_color_picked.toLowerCase()) {
             RootElement.setProperty('--text_color', text_color_picked);
         }
-        if (background_color.toLowerCase() != background_color_picked.toLowerCase()){
+        if (background_color.toLowerCase() != background_color_picked.toLowerCase()) {
             RootElement.setProperty('--background_color', background_color_picked);
         }
-        if (SpinTime != TimeSliderElement.value){
+        if (SpinTime != TimeSliderElement.value) {
             RootElement.setProperty('--spin_speed', `${TimeSliderElement.value}s`);
         }
 
 
         //Ghost stuff:
         for (let [ghost, data] of Object.entries(ghostsInfo)) {
-            let ghostElement = SettingsElement.querySelector('.' + ghost.replace(' ', '_'));
+            let ghostElement = SettingsElement.querySelector('.' + ghost.replaceAll(' ', '_'));
             let ghostNameElement = ghostElement.querySelector('.ghost_name');
             let ghostColorElement = ghostElement.querySelector('.ghost_color');
             let textColorElement = ghostElement.querySelector('.text_color');
@@ -443,6 +460,7 @@ function SaveSettings() {
             let textColor = textColorElement.value;
             let ghostColorStored = data['color'];
             let textColorStored = data['text_color'];
+
             if (ghostColorStored.toLowerCase() != ghostColor.toLowerCase()) {
                 ghostsInfo[ghost]['color'] = ghostColor;
             }
@@ -452,6 +470,7 @@ function SaveSettings() {
             }
 
             if (ghost != ghostName) {
+                ghostName = ghostName.trim();
                 //Finally, if the ghost name is different replace the whole array at the olds array index, 
                 // this way it will be easier for the user to spot changes they made
 
@@ -512,7 +531,7 @@ function remove_ghost(ghost) {
         //Delete the ghost from selection:
         //Get the index of the ghost name in the selection.
         let IndexToDelete = ghostSelection.indexOf(ghost);
-        ghostSelection.splice(IndexToDelete,IndexToDelete); //Splices from the same index as the to index.
+        ghostSelection.splice(IndexToDelete, IndexToDelete); //Splices from the same index as the to index.
 
         localStorage.setItem('ghosts', JSON.stringify(ghostsInfo));
         let scrollPosition = document.querySelector('.Settings').scrollTop;
@@ -530,6 +549,19 @@ function remove_ghost(ghost) {
     confirmElement.style.top = `${mouseY - (confirmElement.clientHeight / 2)}px`; //The Y is centered on the mouse.
 }
 
+function add_ghost() {
+    let ghostName = 'New Ghost';
+    let iteration = 0;
+    while (ghostsInfo[ghostName] != undefined) {
+        ghostName = `New Ghost ${iteration}`;
+    }
+    ghostsInfo[ghostName] = { color: '#FFFFFF', text_color: '#0f0000' };
+    ghostSelection.push(ghostName);
+    let scrollPosition = document.querySelector('.Settings').scrollTop;
+    changesettings();
+    document.querySelector('.Settings').scrollTop = scrollPosition;
+}
+
 function CheckForChanges(ParentClassName, ElementClassName) {
     //Checks if the value of the box is different from the default (placeholder) value, and shows a different color.
     let Element = document.querySelector(ParentClassName).querySelector(ElementClassName);
@@ -539,7 +571,11 @@ function CheckForChanges(ParentClassName, ElementClassName) {
     } else {
         Element.style.backgroundColor = 'var(--secondary_color)';
         Element.classList.remove("changedValue");
+    }
 
+    if (Element.placeholder.includes("New Ghost") && Element.value.includes("New Ghost") == false) {
+        Element.style.backgroundColor = 'var(--secondary_color)';
+        Element.classList.remove("changedValue");
     }
 }
 
@@ -552,10 +588,11 @@ function about() {
     window.open("https://github.com/Filipdominik/PhasmophobiaWheel");
 }
 
-function SaveSetup(){
+function SaveSetup() {
     //Stores the changes made by the user to storage.
-    localStorage.setItem('data',JSON.stringify(ghostsInfo));
-    localStorage.setItem('selection',JSON.stringify(ghostSelection));
+    console.log(ghostSelection);
+    localStorage.setItem('data', JSON.stringify(ghostsInfo));
+    localStorage.setItem('selection', JSON.stringify(ghostSelection));
 
     let RootElement = getComputedStyle(document.documentElement);
     let main_color = RootElement.getPropertyValue('--main_color');
@@ -565,8 +602,8 @@ function SaveSetup(){
     let text_color = RootElement.getPropertyValue('--text_color');
     let background_color = RootElement.getPropertyValue('--background_color');
     let SpinTime = RootElement.getPropertyValue('--spin_speed');
-    let pageColors = {main_color,secondary_color,accent_color,accent_color_negative,text_color,background_color,SpinTime};
-    localStorage.setItem('pageColors',JSON.stringify(pageColors));
+    let pageColors = { main_color, secondary_color, accent_color, accent_color_negative, text_color, background_color, SpinTime };
+    localStorage.setItem('pageColors', JSON.stringify(pageColors));
 
     //Show PopUp for 2 seconds to let the user know their settings were saved.
     let PopUpElement = document.querySelector('.PopUp');
@@ -580,7 +617,7 @@ function SaveSetup(){
     PopUpElement.style.cursor = 'cursor';
     setTimeout(function () {
         HidePopUp();
-    },2000);
+    }, 2000);
 }
 
 function ReadParameters() {
@@ -612,13 +649,32 @@ function WriteParameters() {
 
 window.onload = function () {
     if (document.location.search.length > 2) {
+        console.log("Loaded from URL");
         let [data, selection] = ReadParameters();
         ghostsInfo = JSON.parse(data);
         ghostSelection = JSON.parse(selection);
         generateWheel(ghostSelection);
     } else {
-        ghostsInfo = loadGhostTypes();
-        generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
+        //Attempt to load ghostSelection from storage:
+        ghostSelectionText = localStorage.getItem('selection');
+        if (typeof (ghostSelectionText) != "string") {
+            console.log("Loaded new");
+            ghostsInfo = loadGhostTypes();
+            generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
+        }
+        else {
+            //Load the ghostInfo from storage
+            let ghostInfoText = localStorage.getItem('data');
+            if (typeof(ghostInfoText) != 'string'){
+                ghostsInfo = loadGhostTypes();
+            }
+            else{
+                ghostsInfo = JSON.parse(ghostInfoText);
+            }
+            console.log("Loaded from storage");
+            ghostSelection = JSON.parse(ghostSelectionText);
+            generateWheel(ghostSelection);
+        }
     }
 
     document.querySelector('main').addEventListener("click", spinWheel);
@@ -639,7 +695,7 @@ window.onload = function () {
     if (typeof (storedColors) == 'string') {
         let parsedColors = JSON.parse(storedColors);
         let RootElement = document.documentElement.style;
-        RootElement.setProperty('--main_color',parsedColors['main_color']);
+        RootElement.setProperty('--main_color', parsedColors['main_color']);
         RootElement.setProperty('--secondary_color', parsedColors['secondary_color']);
         RootElement.setProperty('--accent_color', parsedColors['accent_color']);
         RootElement.setProperty('--accent_color_negative', parsedColors['accent_color_negative']);
