@@ -398,6 +398,41 @@ function SaveSettings() {
     confirmElement.querySelector('p').innerHTML = "If you do, you'll need to save the new settings with the Save button in the top right corner";
 
     confirmElement.querySelector('.SelectionConfirm').onclick = function () {
+        //Page settings:
+        let main_color_picked = document.querySelector('.main_color').value;
+        let secondary_color_picked = document.querySelector('.secondary_color').value;
+        let accent_color_picked = document.querySelector('.accent_color').value;
+        let accent_color_negative_picked = document.querySelector('.accent_color_negative').value;
+        let text_color_picked = document.getElementsByClassName('text_color color_picker')[0].value;
+        let background_color_picked = document.querySelector('.background_color').value;
+        let TimeSliderElement = PopUpContentElement.querySelector('.TimeSlider');
+
+        let RootElement = document.documentElement.style;
+        if (main_color.toLowerCase() != main_color_picked.toLowerCase()){
+            RootElement.setProperty('--main_color',main_color_picked);
+        }
+
+        if (secondary_color.toLowerCase() != secondary_color_picked.toLowerCase()){
+            RootElement.setProperty('--secondary_color', secondary_color_picked);
+        }
+        if (accent_color.toLowerCase() != accent_color_picked.toLowerCase()){
+            RootElement.setProperty('--accent_color', accent_color_picked);
+        }
+        if (accent_color_negative.toLowerCase() != accent_color_negative_picked.toLowerCase()){
+            RootElement.setProperty('--accent_color_negative', accent_color_negative_picked);
+        }
+        if (text_color.toLowerCase() != text_color_picked.toLowerCase()){
+            RootElement.setProperty('--text_color', text_color_picked);
+        }
+        if (background_color.toLowerCase() != background_color_picked.toLowerCase()){
+            RootElement.setProperty('--background_color', background_color_picked);
+        }
+        if (SpinTime != TimeSliderElement.value){
+            RootElement.setProperty('--spin_speed', `${TimeSliderElement.value}s`);
+        }
+
+
+        //Ghost stuff:
         for (let [ghost, data] of Object.entries(ghostsInfo)) {
             let ghostElement = SettingsElement.querySelector('.' + ghost.replace(' ', '_'));
             let ghostNameElement = ghostElement.querySelector('.ghost_name');
@@ -406,7 +441,6 @@ function SaveSettings() {
             let ghostName = ghostNameElement.value;
             let ghostColor = ghostColorElement.value;
             let textColor = textColorElement.value;
-
             let ghostColorStored = data['color'];
             let textColorStored = data['text_color'];
             if (ghostColorStored.toLowerCase() != ghostColor.toLowerCase()) {
@@ -518,6 +552,37 @@ function about() {
     window.open("https://github.com/Filipdominik/PhasmophobiaWheel");
 }
 
+function SaveSetup(){
+    //Stores the changes made by the user to storage.
+    localStorage.setItem('data',JSON.stringify(ghostsInfo));
+    localStorage.setItem('selection',JSON.stringify(ghostSelection));
+
+    let RootElement = getComputedStyle(document.documentElement);
+    let main_color = RootElement.getPropertyValue('--main_color');
+    let secondary_color = RootElement.getPropertyValue('--secondary_color');
+    let accent_color = RootElement.getPropertyValue('--accent_color');
+    let accent_color_negative = RootElement.getPropertyValue('--accent_color_negative');
+    let text_color = RootElement.getPropertyValue('--text_color');
+    let background_color = RootElement.getPropertyValue('--background_color');
+    let SpinTime = RootElement.getPropertyValue('--spin_speed');
+    let pageColors = {main_color,secondary_color,accent_color,accent_color_negative,text_color,background_color,SpinTime};
+    localStorage.setItem('pageColors',JSON.stringify(pageColors));
+
+    //Show PopUp for 2 seconds to let the user know their settings were saved.
+    let PopUpElement = document.querySelector('.PopUp');
+    let SettingsElement = document.querySelector('.Settings');
+    let WinningGhost_Text = document.querySelector('.winning_ghost_text');
+    WinningGhost_Text.style.display = 'block';
+    WinningGhost_Text.innerHTML = 'Settings saved!';
+    SettingsElement.style.display = 'none';
+    PopUpElement.style.display = 'flex';
+    PopUpElement.onclick = HidePopUp;
+    PopUpElement.style.cursor = 'cursor';
+    setTimeout(function () {
+        HidePopUp();
+    },2000);
+}
+
 function ReadParameters() {
     //Reads settings from url.
     let USP = new URLSearchParams(document.location.search);
@@ -562,10 +627,30 @@ window.onload = function () {
             spinWheel();
         }
     }
-    document.querySelector('.settingsBTN').onclick = changesettings;
+
     window.onmousemove = function (event) {
+        //For the confirm box inside of the PopUp.
         mouseX = event.clientX;
         mouseY = event.clientY;
     }
-    // setInterval(function () { getRotationAngle('.wheel') }, 100); //debugging
+
+    //Load colors from storage, if it exits.
+    let storedColors = localStorage.getItem('pageColors');
+    if (typeof (storedColors) == 'string') {
+        let parsedColors = JSON.parse(storedColors);
+        let RootElement = document.documentElement.style;
+        RootElement.setProperty('--main_color',parsedColors['main_color']);
+        RootElement.setProperty('--secondary_color', parsedColors['secondary_color']);
+        RootElement.setProperty('--accent_color', parsedColors['accent_color']);
+        RootElement.setProperty('--accent_color_negative', parsedColors['accent_color_negative']);
+        RootElement.setProperty('--text_color', parsedColors['text_color']);
+        RootElement.setProperty('--background_color', parsedColors['background_color']);
+        RootElement.setProperty('--spin_speed', parsedColors['SpinTime']);
+    }
+
+    document.querySelector('.saveBTN').onclick = SaveSetup;
+    document.querySelector('.shareBTN').onclick = share;
+    document.querySelector('.aboutBTN').onclick = about;
+    document.querySelector('.resetBTN').onclick = reset;
+    document.querySelector('.settingsBTN').onclick = changesettings;
 };
