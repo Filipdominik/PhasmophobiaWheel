@@ -144,6 +144,37 @@ main{
     z-index: 2;
 }
 
+.Winning_Ghost{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    background-color: var(--main_color);
+    border-radius: 10px;
+    box-shadow: 10px 10px var(--secondary_color);
+}
+
+.winning_ghost_evidence{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding:10px;
+    margin:10px;
+}
+
+.winning_ghost_evidence > *{
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.winning_ghost_evidence > * > img{
+    width: 24px;
+    height: 24px;
+}
+
 
 .Settings{
     display: none;

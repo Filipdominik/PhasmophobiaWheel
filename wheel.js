@@ -127,99 +127,123 @@ function loadGhostTypes() {
     ghostsInfo = {
         Banshee: {
             color: "#6600cc",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "orbs", "fingerprints"]
         },
         Demon: {
             color: "#990000",
-            text_color: "#FF0000"
+            text_color: "#FF0000",
+            evindence: ["freezing", "writing", "fingerprints"]
         },
         Deogen: {
             color: "#ffcc00",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["dots", "writing", "spirit_box"]
         },
         Goryo: {
             color: "#66ff99",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "emf_5", "fingerprints"]
         },
         Hantu: {
             color: "#3399ff",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["orbs", "freezing", "fingerprints"]
         },
         Jinn: {
             color: "#ff9900",
-            text_color: "#FFFF00"
+            text_color: "#FFFF00",
+            evindence: ["emf_5", "freezing", "fingerprints"]
         },
         Mare: {
             color: "#993333",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["writing", "orbs", "spirit_box"]
         },
         Moroi: {
             color: "#cc00cc",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["writing", "orbs", "spirit_box"]
         },
         Myling: {
             color: "#ccffcc",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["writing", "emf_5", "fingerprints"]
         },
         Obake: {
             color: "#ffcc99",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["emf_5", "orbs", "fingerprints"]
         },
         Oni: {
             color: "#cc6600",
-            text_color: "#FFA500"
+            text_color: "#FFA500",
+            evindence: ["dots", "emf_5", "freezing"]
         },
         Onryo: {
             color: "#ff3366",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["orbs", "freezing", "spirit_box"]
         },
         Phantom: {
             color: "#6666ff",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "emf_5", "orbs"]
         },
         Poltergeist: {
             color: "#00ccff",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["writing", "fingerprints", "spirit_box"]
         },
         Raiju: {
             color: "#33cc33",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "emf_5", "orbs"]
         },
         Revenant: {
             color: "#9900cc",
-            text_color: "#FF0000"
+            text_color: "#FF0000",
+            evindence: ["writing", "orbs", "freezing"]
         },
         Shade: {
             color: "#666666",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["writing", "emf_5", "freezing"]
         },
         Spirit: {
             color: "#99ccff",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["writing", "emf_5", "spirit_box"]
         },
         Thaye: {
             color: "#ff6666",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "writing", "orbs"]
         },
         "The Mimic": {
             color: "#9966ff",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["fingerprints", "freezing", "spirit_box"]
         },
         "The Twins": {
             color: "#ff99cc",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["dots", "writing", "spirit_box"]
         },
         Wraith: {
             color: "#00ffcc",
-            text_color: "#000000"
+            text_color: "#000000",
+            evindence: ["dots", "emf_5", "spirit_box"]
         },
         Yokai: {
             color: "#ff3399",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "orbs", "spirit_box"]
         },
         Yurei: {
             color: "#9999ff",
-            text_color: "#FFFFFF"
+            text_color: "#FFFFFF",
+            evindence: ["dots", "orbs", "freezing"]
         }
     };
 
@@ -228,15 +252,27 @@ function loadGhostTypes() {
 
 }
 
+function TranslateEvidence(evidence){
+    if (evidence == 'dots') return 'D.O.T.S. Projector';
+    if(evidence == 'writing') return 'Ghost Writing';
+    if(evidence == 'emf_5') return 'EMF Level 5';
+    if (evidence == 'orbs') return 'Ghost Orbs';
+    if (evidence == 'fingerprints') return 'Fingerprints';
+    if (evidence == 'freezing') return 'Freezing Temperatures';
+    if (evidence == 'spirit_box') return 'Spirit Box';
+}
+
 function spinWheel() {
     document.querySelector('main').removeEventListener("click", spinWheel);
+    document.onkeydown = '';
+    let SpinTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
     setTimeout(function () {
         document.onkeydown = function (key) {
             if (key.key == ' ') {
                 HidePopUp();
             }
         }
-    }, 100)
+    }, SpinTime);
 
     const wheel = document.querySelector('.wheel');
     var randomDegrees = Math.random() * 360;
@@ -258,11 +294,37 @@ function spinWheel() {
                     let PopUpElement = document.querySelector('.PopUp');
                     let SettingsElement = document.querySelector('.Settings');
                     let WinningGhost_Text = document.querySelector('.winning_ghost_text');
+                    let Evidence_Div = document.querySelector('.winning_ghost_evidence');
                     WinningGhost_Text.style.display = 'block';
                     SettingsElement.style.display = 'none';
                     PopUpElement.style.display = 'flex';
                     PopUpElement.onclick = HidePopUp;
                     PopUpElement.style.cursor = 'cursor';
+
+                    let [Evidence1,Evidence2,Evidence3] = info['evindence'];
+
+                    let [Evidence1Image, Evidence1Text] = Evidence_Div.querySelector('.evidence_1').children;
+                    console.log(Evidence1Image, Evidence1Text);
+                    let [Evidence2Image, Evidence2Text] = Evidence_Div.querySelector('.evidence_2').children;
+                    let [Evidence3Image, Evidence3Text] = Evidence_Div.querySelector('.evidence_3').children;
+
+                    Evidence1Image.src = `./images/evidence/${Evidence1}.webp`;
+                    Evidence1Text.innerHTML = TranslateEvidence(Evidence1);
+                    Evidence2Image.src = `./images/evidence/${Evidence2}.webp`;
+                    Evidence2Text.innerHTML = TranslateEvidence(Evidence2);
+                    Evidence3Image.src = `./images/evidence/${Evidence3}.webp`;
+                    Evidence3Text.innerHTML = TranslateEvidence(Evidence3);
+                    
+                    console.log(Evidence_Div);
+                    //if the ghost is The Mimic, show the forced orbs.
+                    let Evidence_Orbs = Evidence_Div.querySelector('.orbs');
+                    if (ghost == 'The Mimic') {
+                        Evidence_Orbs.style.display = 'block';
+                    }
+                    else{
+                        Evidence_Orbs.style.display = 'none';
+                    }
+
                 }, spinspeed);
             }
         }

@@ -14,11 +14,15 @@
     <nav>
         <h1 class="title">Phasmophobia Ghost Casino</h1>
         <div class="buttons">
-            <button class="resetBTN button" title="Resets all settings made by the user to default (ghost colors, page colors and spin time)." onclick=reset()>Reset
+            <button class="resetBTN button"
+                title="Resets all settings made by the user to default (ghost colors, page colors and spin time)."
+                onclick=reset()>Reset
                 page</button>
             <button class="settingsBTN button" title="Change the current settings (ghost types and colors)">Change
                 Settings</button>
-            <button class="shareBTN button" title="Share the current ghost selection and ghost colors. Page colors are currently not included." onclick=share()>Share</button>
+            <button class="shareBTN button"
+                title="Share the current ghost selection and ghost colors. Page colors are currently not included."
+                onclick=share()>Share</button>
             <button class="saveBTN button" title="Save the current settings" onclick=SaveSetup()>Save setup</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
             <button class="aboutBTN button" title="About this page (redirect to github.com)"
@@ -37,7 +41,27 @@
     </main>
     <div class="PopUp">
         <div class="PopUpContent">
-            <h1 class="winning_ghost_text"></h1>
+            <div class="Winning_Ghost">
+                <h1 class="winning_ghost_text"></h1>
+                <div class="winning_ghost_evidence">
+                    <div class="evidence_1">
+                        <img src="" alt="">
+                        <h3></h3>
+                    </div>
+                    <div class="evidence_2">
+                        <img src="" alt="">
+                        <h3></h3>
+                    </div>
+                    <div class="evidence_3">
+                        <img src="" alt="">
+                        <h3></h3>
+                    </div>
+                    <div style="display:none;" class="orbs">
+                        <img src="/images/evidence/orbs.webp" alt="Ghost Orbs">
+                        <h3>The Mimic always has orbs</h3>
+                    </div>
+                </div>
+            </div>
             <div class="Settings">
                 <div class="ConfirmSelectionPopUp">
                     <h3>Are you sure you want to delete ${Ghost}?</h3>
@@ -153,4 +177,5 @@
         </div>
     </div>
 </body>
+
 </html>
