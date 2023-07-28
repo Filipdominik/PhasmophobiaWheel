@@ -551,9 +551,10 @@ function remove_ghost(ghost) {
 
 function add_ghost() {
     let ghostName = 'New Ghost';
-    let iteration = 0;
+    let iteration = 1;
     while (ghostsInfo[ghostName] != undefined) {
         ghostName = `New Ghost ${iteration}`;
+        iteration += 1;
     }
     ghostsInfo[ghostName] = { color: '#FFFFFF', text_color: '#0f0000' };
     ghostSelection.push(ghostName);
