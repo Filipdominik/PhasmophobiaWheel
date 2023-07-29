@@ -25,8 +25,8 @@
                 onclick=share()>Share</button>
             <button class="saveBTN button" title="Save the current settings" onclick=SaveSetup()>Save setup</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
-            <button class="aboutBTN button" title="About this page (redirect to github.com)"
-                onclick=about()>About</button>
+            <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>About &
+                Credits</button>
         </div>
     </nav>
     <main>
@@ -45,20 +45,20 @@
                 <h1 class="winning_ghost_text"></h1>
                 <div class="winning_ghost_evidence">
                     <div class="evidence_1">
-                        <img src="" alt="">
+                        <img>
                         <h3></h3>
                     </div>
                     <div class="evidence_2">
-                        <img src="" alt="">
+                        <img>
                         <h3></h3>
                     </div>
                     <div class="evidence_3">
-                        <img src="" alt="">
+                        <img>
                         <h3></h3>
                     </div>
                     <div style="display:none;" class="orbs">
-                        <img src="/images/evidence/orbs.webp" alt="Ghost Orbs">
-                        <h3>The Mimic always has orbs</h3>
+                        <img src="/images/evidence/orbs.webp">
+                        <h3>Ghost Orbs</h3>
                     </div>
                 </div>
             </div>
@@ -70,6 +70,82 @@
                         <button class="SelectionConfirm button remove_ghost">Yes</button>
                         <button class="SelectionCancel button">No</button>
                     </div>
+                </div>
+                <div class="Select_Evidence">
+                    <h1>Select the evidence for ${Ghost}</h1>
+                    <div class="Current_Evidence">
+                        <div class="evidence evidence_1">
+                            <img>
+                            <select class="evidence_select" onchange="UpdateEvidence(1)">
+                                <option value="emf_5">EMF Level 5</option>
+                                <option value="fingerprints">Fingerprints</option>
+                                <option value="writing">Ghost Writing</option>
+                                <option value="freezing">Freezing Temperatures</option>
+                                <option value="dots">D.O.T.S. Projector</option>
+                                <option value="orbs">Ghost Orbs</option>
+                                <option value="spirit_box">Spirit Box</option>
+                            </select>
+                        </div>
+                        <div class="evidence evidence_2">
+                            <img>
+                            <select class="evidence_select" onchange="UpdateEvidence(2)">
+                                <option value="emf_5">EMF Level 5</option>
+                                <option value="fingerprints">Fingerprints</option>
+                                <option value="writing">Ghost Writing</option>
+                                <option value="freezing">Freezing Temperatures</option>
+                                <option value="dots">D.O.T.S. Projector</option>
+                                <option value="orbs">Ghost Orbs</option>
+                                <option value="spirit_box">Spirit Box</option>
+                            </select>
+                        </div>
+                        <div class="evidence evidence_3">
+                            <img>
+                            <select class="evidence_select" onchange="UpdateEvidence(3)">
+                                <option value="emf_5">EMF Level 5</option>
+                                <option value="fingerprints">Fingerprints</option>
+                                <option value="writing">Ghost Writing</option>
+                                <option value="freezing">Freezing Temperatures</option>
+                                <option value="dots">D.O.T.S. Projector</option>
+                                <option value="orbs">Ghost Orbs</option>
+                                <option value="spirit_box">Spirit Box</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="Confirm_Evidence">
+                        <button class="button" style="margin:none; margin-right:10px;">Confirm</button>
+                        <button class="button remove_ghost" style="margin:none;">Cancel</button>
+                    </div>
+                    <!-- <h1>Select new evidence for the ghost</h1>
+                    <div class="Other_Evidence">
+                        <div class="evidence emf_5">
+                            <img src="/images/evidence/emf_5.webp">
+                            <h3>EMF Level 5</h3>
+                        </div>
+                        <div class="evidence fingerprints">
+                            <img src="/images/evidence/fingerprints.webp">
+                            <h3>Fingerprints</h3>
+                        </div>
+                        <div class="evidence writing">
+                            <img src="/images/evidence/writing.webp">
+                            <h3>Ghost Writing</h3>
+                        </div>
+                        <div class="evidence freezing">
+                            <img src="/images/evidence/freezing.webp">
+                            <h3>Freezing Temperatures</h3>
+                        </div>
+                        <div class="evidence dots">
+                            <img src="/images/evidence/dots.webp">
+                            <h3>D.O.T.S. Projector</h3>
+                            <div class="evidence orbs">
+                                <img src="/images/evidence/orbs.webp">
+                                <h3>Ghost Orbs</h3>
+                            </div>
+                            <div class="evidence spirit_box">
+                                <img src="/images/evidence/spirit_box.webp">
+                                <h3>Spirit Box</h3>
+                            </div>
+                        </div>
+                    </div> -->
                 </div>
                 <h1>Settings & Ghost Selection</h1>
                 <!-- table of ghosts -->

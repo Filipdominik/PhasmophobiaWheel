@@ -1,4 +1,5 @@
 let ghostsInfo;
+let ghostsInfoTemp;
 let ghostSelection = [];
 let [mouseX, mouseY] = [];
 // Utility Functions
@@ -128,122 +129,122 @@ function loadGhostTypes() {
         Banshee: {
             color: "#6600cc",
             text_color: "#FFFFFF",
-            evindence: ["dots", "orbs", "fingerprints"]
+            evidence: ["dots", "orbs", "fingerprints"]
         },
         Demon: {
             color: "#990000",
             text_color: "#FF0000",
-            evindence: ["freezing", "writing", "fingerprints"]
+            evidence: ["freezing", "writing", "fingerprints"]
         },
         Deogen: {
             color: "#ffcc00",
             text_color: "#000000",
-            evindence: ["dots", "writing", "spirit_box"]
+            evidence: ["dots", "writing", "spirit_box"]
         },
         Goryo: {
             color: "#66ff99",
             text_color: "#FFFFFF",
-            evindence: ["dots", "emf_5", "fingerprints"]
+            evidence: ["dots", "emf_5", "fingerprints"]
         },
         Hantu: {
             color: "#3399ff",
             text_color: "#FFFFFF",
-            evindence: ["orbs", "freezing", "fingerprints"]
+            evidence: ["orbs", "freezing", "fingerprints"]
         },
         Jinn: {
             color: "#ff9900",
             text_color: "#FFFF00",
-            evindence: ["emf_5", "freezing", "fingerprints"]
+            evidence: ["emf_5", "freezing", "fingerprints"]
         },
         Mare: {
             color: "#993333",
             text_color: "#FFFFFF",
-            evindence: ["writing", "orbs", "spirit_box"]
+            evidence: ["writing", "orbs", "spirit_box"]
         },
         Moroi: {
             color: "#cc00cc",
             text_color: "#FFFFFF",
-            evindence: ["writing", "orbs", "spirit_box"]
+            evidence: ["writing", "orbs", "spirit_box"]
         },
         Myling: {
             color: "#ccffcc",
             text_color: "#000000",
-            evindence: ["writing", "emf_5", "fingerprints"]
+            evidence: ["writing", "emf_5", "fingerprints"]
         },
         Obake: {
             color: "#ffcc99",
             text_color: "#FFFFFF",
-            evindence: ["emf_5", "orbs", "fingerprints"]
+            evidence: ["emf_5", "orbs", "fingerprints"]
         },
         Oni: {
             color: "#cc6600",
             text_color: "#FFA500",
-            evindence: ["dots", "emf_5", "freezing"]
+            evidence: ["dots", "emf_5", "freezing"]
         },
         Onryo: {
             color: "#ff3366",
             text_color: "#FFFFFF",
-            evindence: ["orbs", "freezing", "spirit_box"]
+            evidence: ["orbs", "freezing", "spirit_box"]
         },
         Phantom: {
             color: "#6666ff",
             text_color: "#FFFFFF",
-            evindence: ["dots", "emf_5", "orbs"]
+            evidence: ["dots", "emf_5", "orbs"]
         },
         Poltergeist: {
             color: "#00ccff",
             text_color: "#000000",
-            evindence: ["writing", "fingerprints", "spirit_box"]
+            evidence: ["writing", "fingerprints", "spirit_box"]
         },
         Raiju: {
             color: "#33cc33",
             text_color: "#FFFFFF",
-            evindence: ["dots", "emf_5", "orbs"]
+            evidence: ["dots", "emf_5", "orbs"]
         },
         Revenant: {
             color: "#9900cc",
             text_color: "#FF0000",
-            evindence: ["writing", "orbs", "freezing"]
+            evidence: ["writing", "orbs", "freezing"]
         },
         Shade: {
             color: "#666666",
             text_color: "#FFFFFF",
-            evindence: ["writing", "emf_5", "freezing"]
+            evidence: ["writing", "emf_5", "freezing"]
         },
         Spirit: {
             color: "#99ccff",
             text_color: "#000000",
-            evindence: ["writing", "emf_5", "spirit_box"]
+            evidence: ["writing", "emf_5", "spirit_box"]
         },
         Thaye: {
             color: "#ff6666",
             text_color: "#FFFFFF",
-            evindence: ["dots", "writing", "orbs"]
+            evidence: ["dots", "writing", "orbs"]
         },
         "The Mimic": {
             color: "#9966ff",
             text_color: "#FFFFFF",
-            evindence: ["fingerprints", "freezing", "spirit_box"]
+            evidence: ["fingerprints", "freezing", "spirit_box"]
         },
         "The Twins": {
             color: "#ff99cc",
             text_color: "#000000",
-            evindence: ["dots", "writing", "spirit_box"]
+            evidence: ["dots", "writing", "spirit_box"]
         },
         Wraith: {
             color: "#00ffcc",
             text_color: "#000000",
-            evindence: ["dots", "emf_5", "spirit_box"]
+            evidence: ["dots", "emf_5", "spirit_box"]
         },
         Yokai: {
             color: "#ff3399",
             text_color: "#FFFFFF",
-            evindence: ["dots", "orbs", "spirit_box"]
+            evidence: ["dots", "orbs", "spirit_box"]
         },
         Yurei: {
             color: "#9999ff",
             text_color: "#FFFFFF",
-            evindence: ["dots", "orbs", "freezing"]
+            evidence: ["dots", "orbs", "freezing"]
         }
     };
 
@@ -252,10 +253,10 @@ function loadGhostTypes() {
 
 }
 
-function TranslateEvidence(evidence){
+function TranslateEvidence(evidence) {
     if (evidence == 'dots') return 'D.O.T.S. Projector';
-    if(evidence == 'writing') return 'Ghost Writing';
-    if(evidence == 'emf_5') return 'EMF Level 5';
+    if (evidence == 'writing') return 'Ghost Writing';
+    if (evidence == 'emf_5') return 'EMF Level 5';
     if (evidence == 'orbs') return 'Ghost Orbs';
     if (evidence == 'fingerprints') return 'Fingerprints';
     if (evidence == 'freezing') return 'Freezing Temperatures';
@@ -297,14 +298,14 @@ function spinWheel() {
                     let Evidence_Div = document.querySelector('.winning_ghost_evidence');
                     WinningGhost_Text.style.display = 'block';
                     SettingsElement.style.display = 'none';
+                    document.querySelector('.Winning_Ghost').style.display = 'flex';
                     PopUpElement.style.display = 'flex';
                     PopUpElement.onclick = HidePopUp;
                     PopUpElement.style.cursor = 'cursor';
 
-                    let [Evidence1,Evidence2,Evidence3] = info['evindence'];
+                    let [Evidence1, Evidence2, Evidence3] = info['evidence'];
 
                     let [Evidence1Image, Evidence1Text] = Evidence_Div.querySelector('.evidence_1').children;
-                    console.log(Evidence1Image, Evidence1Text);
                     let [Evidence2Image, Evidence2Text] = Evidence_Div.querySelector('.evidence_2').children;
                     let [Evidence3Image, Evidence3Text] = Evidence_Div.querySelector('.evidence_3').children;
 
@@ -314,14 +315,13 @@ function spinWheel() {
                     Evidence2Text.innerHTML = TranslateEvidence(Evidence2);
                     Evidence3Image.src = `./images/evidence/${Evidence3}.webp`;
                     Evidence3Text.innerHTML = TranslateEvidence(Evidence3);
-                    
-                    console.log(Evidence_Div);
+
                     //if the ghost is The Mimic, show the forced orbs.
                     let Evidence_Orbs = Evidence_Div.querySelector('.orbs');
                     if (ghost == 'The Mimic') {
                         Evidence_Orbs.style.display = 'block';
                     }
-                    else{
+                    else {
                         Evidence_Orbs.style.display = 'none';
                     }
 
@@ -368,7 +368,9 @@ function changesettings() {
     let PopUpElement = document.querySelector('.PopUp');
     let PopUpContentElement = document.querySelector('.PopUpContent');
     let SettingsElement = document.querySelector('.Settings');
-    let WinningGhost_Text = document.querySelector('.winning_ghost_text');
+    let WinningGhost_Text = document.querySelector('.Winning_Ghost');
+    let evidence_popup = document.querySelector('.Select_Evidence')
+    evidence_popup.style.display = 'none';
     WinningGhost_Text.style.display = 'none';
     SettingsElement.style.display = 'flex';
     PopUpElement.style.display = 'flex';
@@ -457,6 +459,8 @@ function changesettings() {
     let SpinTime = RootElement.getPropertyValue('--spin_speed');
     TimeSliderElement.value = parseInt(SpinTime);
     TimeSliderElement.parentElement.querySelector('p').innerHTML = `${TimeSliderElement.value}s`;
+
+    ghostsInfoTemp = ghostsInfo;
 }
 
 function SaveSettings() {
@@ -582,6 +586,99 @@ function SaveSettings() {
     confirmElement.style.top = `${mouseY - (confirmElement.clientHeight)}px`;
 }
 
+function show_evidence(ghost) {
+    let evidence_popup = document.querySelector('.Select_Evidence');
+    let evidence_info = evidence_popup.querySelector('.Current_Evidence');
+    evidence_popup.querySelector('h1').innerHTML = `Select the evidence for ${ghost}`;
+
+    let [Current_Evidence_1, Current_Evidence_2, Current_Evidence_3] = ghostsInfo[ghost]['evidence'];
+    let evidence_1 = evidence_info.querySelector('.evidence_1');
+    let evidence_2 = evidence_info.querySelector('.evidence_2');
+    let evidence_3 = evidence_info.querySelector('.evidence_3');
+    let evidence_select_1 = evidence_1.querySelector('.evidence_select');
+    let evidence_select_2 = evidence_2.querySelector('.evidence_select');
+    let evidence_select_3 = evidence_3.querySelector('.evidence_select');
+
+    evidence_select_1.value = Current_Evidence_1;
+    evidence_select_2.value = Current_Evidence_2;
+    evidence_select_3.value = Current_Evidence_3;
+
+    evidence_1.style.backgroundColor = 'var(--main_color)';
+    evidence_2.style.backgroundColor = 'var(--main_color)';
+    evidence_3.style.backgroundColor = 'var(--main_color)';
+
+    evidence_1.querySelector('img').src = `./images/evidence/${Current_Evidence_1}.webp`;
+    evidence_2.querySelector('img').src = `./images/evidence/${Current_Evidence_2}.webp`;
+    evidence_3.querySelector('img').src = `./images/evidence/${Current_Evidence_3}.webp`;
+
+
+    evidence_popup.style.display = 'flex';
+    let [confirm_button, cancel_button] = document.querySelector('.Confirm_Evidence').children;
+    confirm_button.onclick = function () {
+        let evidence_selection = [evidence_select_1.value, evidence_select_2.value, evidence_select_3.value];
+        ghostsInfoTemp[ghost]['evidence'] = evidence_selection;
+        evidence_popup.style.display = 'none';
+        //Chage the evidence_popup button color to let the user know something here was changed
+        let showEvidence_button = document.querySelector('.' + ghost.replaceAll(' ', '_')).querySelector('.evidence_popup');
+        showEvidence_button.style.border = '5px solid var(--secondary_color)'; //Change the borders color to the variable
+        showEvidence_button.style.padding = '5px'; //Reduce the padding size so that the button won't get bigger and move everything.
+    }
+    cancel_button.onclick = function () {
+        evidence_popup.style.display = 'none';
+    }
+}
+
+function UpdateEvidence(evidence_id) {
+    let evidence_popup = document.querySelector('.Select_Evidence');
+    let evidence_info = evidence_popup.querySelector('.Current_Evidence');
+    let ghost_name = evidence_popup.querySelector('h1').innerHTML.split('for')[1].trim();
+    let [Current_Evidence_1, Current_Evidence_2, Current_Evidence_3] = ghostsInfo[ghost_name]['evidence'];
+
+    let evidence_1_div = evidence_info.querySelector('.evidence_1');
+    let evidence_2_div = evidence_info.querySelector('.evidence_2');
+    let evidence_3_div = evidence_info.querySelector('.evidence_3');
+    let evidence_select_1 = evidence_1_div.querySelector('.evidence_select');
+    let evidence_select_2 = evidence_2_div.querySelector('.evidence_select');
+    let evidence_select_3 = evidence_3_div.querySelector('.evidence_select');
+
+    let [evidence_1, evidence_2, evidence_3] = [evidence_select_1.value, evidence_select_2.value, evidence_select_3.value];
+
+    //Checks for each evidence_id if it's a duplicate with the other evidences that are currently selected.
+    if (evidence_id == 1) {
+        if (evidence_1 == evidence_2 || evidence_1 == evidence_3) {
+            evidence_1_div.style.backgroundColor = 'var(--main_color)';
+            evidence_select_1.value = Current_Evidence_1;
+        }
+        else {
+            evidence_1_div.style.backgroundColor = 'var(--accent_color)';
+            evidence_1_div.querySelector('img').src = `./images/evidence/${evidence_select_1.value}.webp`;
+        }
+
+    }
+    else if (evidence_id == 2) {
+        if (evidence_2 == evidence_1 || evidence_2 == evidence_3) {
+            evidence_2_div.style.backgroundColor = 'var(--main_color)';
+            evidence_select_2.value = Current_Evidence_2;
+        }
+
+        else {
+            evidence_2_div.style.backgroundColor = 'var(--accent_color)';
+            evidence_2_div.querySelector('img').src = `./images/evidence/${evidence_select_2.value}.webp`;
+        }
+    }
+    else if (evidence_id == 3) {
+        if (evidence_3 == evidence_1 || evidence_3 == evidence_2) {
+            evidence_3_div.style.backgroundColor = 'var(--main_color)';
+            evidence_select_3.value = Current_Evidence_3;
+        }
+
+        else {
+            evidence_3_div.style.backgroundColor = 'var(--accent_color)';
+            evidence_3_div.querySelector('img').src = `./images/evidence/${evidence_select_3.value}.webp`;
+        }
+    }
+}
+
 function remove_ghost(ghost) {
     const confirmElement = document.querySelector('.ConfirmSelectionPopUp');
     confirmElement.querySelector('h3').innerHTML = `Are you sure you want to delete ${ghost} from storage?`;
@@ -653,7 +750,6 @@ function about() {
 
 function SaveSetup() {
     //Stores the changes made by the user to storage.
-    console.log(ghostSelection);
     localStorage.setItem('data', JSON.stringify(ghostsInfo));
     localStorage.setItem('selection', JSON.stringify(ghostSelection));
 
@@ -728,10 +824,10 @@ window.onload = function () {
         else {
             //Load the ghostInfo from storage
             let ghostInfoText = localStorage.getItem('data');
-            if (typeof(ghostInfoText) != 'string'){
+            if (typeof (ghostInfoText) != 'string') {
                 ghostsInfo = loadGhostTypes();
             }
-            else{
+            else {
                 ghostsInfo = JSON.parse(ghostInfoText);
             }
             console.log("Loaded from storage");

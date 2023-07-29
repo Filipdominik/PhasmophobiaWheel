@@ -61,6 +61,7 @@ nav > h1{
 
 .remove_ghost{
     background-color: var(--accent_color_negative); /*More reddish*/
+    margin: 0 !important;
 }
 
 .button:hover{
@@ -162,7 +163,7 @@ main{
     margin:10px;
 }
 
-.winning_ghost_evidence > *{
+.winning_ghost_evidence > * {
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -175,23 +176,76 @@ main{
     height: 24px;
 }
 
-
 .Settings{
     display: none;
     /* Center on y-axis and column */
     background-color: var(--main_color);
-    width: 40vw;
+    width: 50vw;
     height: 80vh;
     border-radius: 10px;
     border: 3px solid var(--main_color);
     box-shadow: 10px 10px var(--secondary_color);
     flex-direction: column;
     align-items: center;
-    /* justify-content: space-around; */
     padding: 10px;
     overflow-y: scroll;
 }
 
+.evidence_popup{
+    margin: 0;
+    margin-right: 5px !important;
+}
+
+/* The evidence setup selection */
+.Select_Evidence{
+    width: 45vw;
+    padding: 25px;
+    background-color: var(--main_color);
+    border-radius: 10px;
+    border: 1px solid var(--secondary_color);
+    box-shadow: 10px 10px var(--secondary_color);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 5;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;  
+}
+
+.evidence{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin:10px;
+}
+
+.evidence > *{
+    margin: 0;
+}
+
+.Current_Evidence{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.evidence_select{
+    margin-top: 5px;
+    background-color: var(--main_color);
+}
+
+.Confirm_Evidence{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+
+/* The popup that shows up asking users for confirmation: */
 .ConfirmSelectionPopUp{
     position: absolute;
     padding: 10px;
