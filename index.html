@@ -14,29 +14,78 @@
     <nav>
         <h1 class="title">Phasmophobia Ghost Casino</h1>
         <div class="buttons">
-            <button class="resetBTN button"
+            <button class="resetBTN button" tabindex="-1"
                 title="Resets all settings made by the user to default (ghost colors, page colors and spin time)."
                 onclick=reset()>Reset
                 page</button>
-            <button class="settingsBTN button" title="Change the current settings (ghost types and colors)">Change
+            <button class="selectGhostBTN button" tabindex="-1" title="Select a ghost to spin for"
+                onclick=selectGhosts()>Select
+                Ghosts</button>
+            <button class="settingsBTN button" tabindex="-1"
+                title="Change the current settings (ghost types and colors)">Change
                 Settings</button>
-            <button class="shareBTN button"
+            <button class="shareBTN button" tabindex="-1"
                 title="Share the current ghost selection and ghost colors. Page colors are currently not included."
                 onclick=share()>Share</button>
-            <button class="saveBTN button" title="Save the current settings" onclick=SaveSetup()>Save setup</button>
+            <button class="saveBTN button" tabindex="-1" title="Save the current settings" onclick=SaveSetup()>Save
+                setup</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
             <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>About &
                 Credits</button>
         </div>
     </nav>
     <main>
-        <div class="wheel2">
-            <canvas></canvas>
+        <div class="the_wheel">
+            <div class="needle">
+                <canvas></canvas>
+            </div>
+            <div class="wheel rotate">
+                <canvas>
+                    <p>Sorry, your browser doesn't support canvas. Please try another.</p>
+                </canvas>
+            </div>
         </div>
-        <div class="wheel rotate">
-            <canvas>
-                <p>Sorry, your browser doesn't support canvas. Please try another.</p>
-            </canvas>
+        <div style="display: none;" class="ghost_and_evidence_selection">
+            <div class="evidence_window">
+                <h1>Evidence</h1>
+                <div class="evidence emf_5">
+                    <img src="/images/evidence/emf_5.webp">
+                    <h3>EMF Level 5</h3>
+                </div>
+                <div class="evidence fingerprints">
+                    <img src="/images/evidence/fingerprints.webp">
+                    <h3>Fingerprints</h3>
+                </div>
+                <div class="evidence writing">
+                    <img src="/images/evidence/writing.webp">
+                    <h3>Ghost Writing</h3>
+                </div>
+                <div class="evidence freezing">
+                    <img src="/images/evidence/freezing.webp">
+                    <h3>Freezing Temperatures</h3>
+                </div>
+                <div class="evidence dots">
+                    <img src="/images/evidence/dots.webp">
+                    <h3>D.O.T.S. Projector</h3>
+                </div>
+                <div class="evidence orbs">
+                    <img src="/images/evidence/orbs.webp">
+                    <h3>Ghost Orbs</h3>
+                </div>
+                <div class="evidence spirit_box">
+                    <img src="/images/evidence/spirit_box.webp">
+                    <h3>Spirit Box</h3>
+                </div>
+            </div>
+            <div class="ghost_selection">
+                <h1>Ghost Selection</h1>
+                <div>
+                    <div class='ghost'>
+                        <h4>Banshee </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </main>
     <div class="PopUp">
@@ -115,37 +164,6 @@
                         <button class="button" style="margin:none; margin-right:10px;">Confirm</button>
                         <button class="button remove_ghost" style="margin:none;">Cancel</button>
                     </div>
-                    <!-- <h1>Select new evidence for the ghost</h1>
-                    <div class="Other_Evidence">
-                        <div class="evidence emf_5">
-                            <img src="/images/evidence/emf_5.webp">
-                            <h3>EMF Level 5</h3>
-                        </div>
-                        <div class="evidence fingerprints">
-                            <img src="/images/evidence/fingerprints.webp">
-                            <h3>Fingerprints</h3>
-                        </div>
-                        <div class="evidence writing">
-                            <img src="/images/evidence/writing.webp">
-                            <h3>Ghost Writing</h3>
-                        </div>
-                        <div class="evidence freezing">
-                            <img src="/images/evidence/freezing.webp">
-                            <h3>Freezing Temperatures</h3>
-                        </div>
-                        <div class="evidence dots">
-                            <img src="/images/evidence/dots.webp">
-                            <h3>D.O.T.S. Projector</h3>
-                            <div class="evidence orbs">
-                                <img src="/images/evidence/orbs.webp">
-                                <h3>Ghost Orbs</h3>
-                            </div>
-                            <div class="evidence spirit_box">
-                                <img src="/images/evidence/spirit_box.webp">
-                                <h3>Spirit Box</h3>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <h1>Settings & Ghost Selection</h1>
                 <!-- table of ghosts -->

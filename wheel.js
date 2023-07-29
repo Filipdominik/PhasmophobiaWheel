@@ -86,7 +86,7 @@ function generateWheel(ghosts) {
     });
 
     // Draw the needle
-    const NeedleContainer = document.querySelector('.wheel2');
+    const NeedleContainer = document.querySelector('.needle');
     const NeedleCanvas = NeedleContainer.children[0];
     NeedleCanvas.width = NeedleContainer.offsetWidth;
     NeedleCanvas.height = NeedleContainer.offsetHeight;
@@ -96,9 +96,9 @@ function generateWheel(ghosts) {
     nCtx.fillStyle = 'grey';
 
     const [x, y] = [NeedleCanvas.width, NeedleCanvas.height];
-    const xStart = Math.round(x / 2) - 20;
+    const xStart = Math.round(x / 2) - 21;
     const yStart = Math.round(y * 0.08);
-    const xEnd = Math.round(x / 2) + 20;
+    const xEnd = Math.round(x / 2) + 21;
     const yEnd = Math.round(y * 0.15);
 
     nCtx.moveTo(xStart, yStart);
@@ -116,6 +116,76 @@ function generateWheel(ghosts) {
     nCtx.stroke();
 }
 
+function selectGhosts() {
+    //Shows the ghost selection screen and dynamically adds all the ghosts from ghostsInfo.
+    let wheel_window = document.querySelector('.the_wheel');
+    let ghost_selection_and_evidence_window = document.querySelector('.ghost_and_evidence_selection');
+    let evidence_selection_window = document.querySelector('.evidence_window');
+    let ghost_selection_window = document.querySelector('.ghost_selection');
+    let ghost_selection_and_evidence_BTN = document.querySelector('.selectGhostBTN');
+
+    //remove all event listeners:
+    document.querySelector('main').removeEventListener("click", spinWheel);
+    document.onkeydown = '';
+    document.querySelector('.PopUp').onclick = '';
+    document.querySelector('.Winning_Ghost').onclick = '';
+    document.querySelector('.Settings').onclick = '';
+
+    //Hide the wheel, show the ghost selection and evidence window:
+    wheel_window.style.display = 'none';
+    ghost_selection_and_evidence_window.style.display = 'flex';
+
+    //Change the button text to go back to wheel.
+    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go Back';
+    ghost_selection_and_evidence_BTN.style.display = 'default';
+
+    //Save the selection, redo the event listeners that were removed and generate the wheel.
+    ghost_selection_and_evidence_BTN.onclick = function () {
+        ghostSelection = [];
+        for (let ghost of ghost_selection_window.querySelectorAll('.ghost')) {
+            if (ghost.style.backgroundColor == 'var(--secondary_color)') {
+                ghostSelection.push(ghost.querySelector('h4').innerHTML);
+            }
+        }
+
+        ghost_selection_and_evidence_window.style.display = 'none';
+        wheel_window.style.display = 'flex';
+
+        ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
+        ghost_selection_and_evidence_BTN.onclick = selectGhosts;
+        generateWheel(ghostSelection);
+    }
+
+    ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div><div class='ghost'><h4></h4></div></div>";
+    let ghost_template = ghost_selection_window.querySelector('.ghost');
+    ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div></div>";
+    //iterate through all ghosts and add them to the ghost selection window.
+    for (let [ghost, info] of Object.entries(ghostsInfo)) {
+        let duped_element = ghost_template.cloneNode(true);
+        duped_element.querySelector('h4').innerHTML = ghost.replaceAll('_', ' ');
+        duped_element.classList.add(ghost.replaceAll(' ', '_'));
+
+        //Check if the ghost is already selected, if so, change the background color.
+        if (ghostSelection.includes(ghost)) {
+            duped_element.style.backgroundColor = 'var(--secondary_color)';
+        }
+        else {
+            duped_element.style.backgroundColor = 'var(--main_color)';
+        }
+
+        duped_element.onclick = function () {
+            if (ghostSelection.includes(ghost)) {
+                ghostSelection.splice(ghostSelection.indexOf(ghost), 1);
+                duped_element.style.backgroundColor = 'var(--main_color)';
+            }
+            else {
+                ghostSelection.push(ghost);
+                duped_element.style.backgroundColor = 'var(--secondary_color)';
+            }
+        }
+        ghost_selection_window.querySelector('div').appendChild(duped_element);
+    }
+}
 
 function loadGhostTypes() {
     let storedData = localStorage.getItem('ghosts');
@@ -281,7 +351,8 @@ function spinWheel() {
     const WinningDegree = (1.5 * Math.PI) * (180 / Math.PI);
     var spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
 
-    for (const [ghost, info] of Object.entries(ghostsInfo)) {
+    ghostSelection.forEach((ghost) => {
+        info = ghostsInfo[ghost];
         var [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
         if (lower > 360) {
             lower -= 360;
@@ -328,7 +399,7 @@ function spinWheel() {
                 }, spinspeed);
             }
         }
-    }
+    });
     changeToPosition(Rotation);
     wheel.classList.remove('rotate');
     wheel.classList.add('spin');

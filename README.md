@@ -17,9 +17,9 @@ Setup sharing: Sharing the ghosts that are stored locally, the ghosts that show 
  - **About & Credits:** Redirects to this page. 
 
 ## Settings:
-In the settings menu you can change ghosts information, remove ghosts, change the pages' theme colors, and change the time the wheel takes to spin.\
+In the settings menu you can change ghosts information, remove ghosts, change the pages' theme colors, and change the time the wheel takes to spin.
 **Ghost settings:** 
-- **Ghost name:** Change the ghost name to something else.\
+- **Ghost name:** Change the ghost name to something else.
 - **Color:** Customize the ghosts' color which shows up on the wheel.
 - **Text Color:** Customize the ghosts' text color which displays the ghosts' name on the wheel.
 - **Change Evidence:** Opens a new window where you can change the evidence of the ghost, currently only The Twins are hardcoded to show orbs.
