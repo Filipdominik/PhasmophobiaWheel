@@ -167,6 +167,17 @@ main {
     padding: 5px;
 }
 
+.evidence_selection_buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+}
+
+.evidence_selection_buttons > button{
+    margin: 10px;
+}
+
 .ghost_selection {
     display: flex;
     flex-direction: column;
@@ -195,7 +206,6 @@ main {
 .ghost:hover {
     background-color: var(--secondary_color);
     transition: all 0.2s;
-
 }
 
 /* End of ghost selection part */

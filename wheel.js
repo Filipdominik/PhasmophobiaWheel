@@ -253,7 +253,77 @@ function FilterEvidence(evidence_type) {
         }
         else {
             //If the ghost doesn't match the filter, go back to regular styling.
+            if (ghostSelection.includes(ghost.querySelector('h4').innerHTML)) {
+                ghost.style.backgroundColor = 'var(--secondary_color)';
+                ghost.style.border = 'none';
+                ghost.style.padding = '10px'; //Reset the padding to normal
+            }
+            else {
+                ghost.style.backgroundColor = 'var(--main_color)';
+                ghost.style.border = 'none';
+                ghost.style.padding = '10px'; //Reset the padding to normal
+            }
+        }
+    }
+}
+
+function Filter_Selection(mode) {
+    //Function to handle the buttons below the evidence selection window
+    let ghost_selection_window = document.querySelector('.ghost_selection');
+    let evidence_elements = document.querySelectorAll('.evidence');
+    let ghost_elements = ghost_selection_window.querySelectorAll('.ghost');
+
+    if (mode == 'clear_evidence') {
+        //Deselects all selected evidence filters.
+        for (let evidence of evidence_elements) {
+            evidence.style.backgroundColor = 'var(--main_color)';
+        }
+    }
+
+    else if (mode == 'clear_all') {
+        //Clears evidence and ghosts selection.
+        for (let evidence of evidence_elements) {
+            evidence.style.backgroundColor = 'var(--main_color)';
+        }
+
+        for (let ghost of ghost_elements) {
+            ghost.style.backgroundColor = 'var(--main_color)';
+            ghost.style.border = 'none';
+            ghost.style.padding = '10px'; //Reset the padding to normal
+            ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
+        }
+    }
+
+    else if (mode == 'clear_selection') {
+        //Deselects all ghosts.
+        for (let ghost of ghost_elements) {
+            ghost.style.backgroundColor = 'var(--main_color)';
+            ghost.style.border = 'none';
+            ghost.style.padding = '10px'; //Reset the padding to normal
+            ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
+        }
+    }
+
+    else if (mode == 'filtered') {
+        //Selects all ghosts that match the filter (have a border).
+        for (let ghost of ghost_elements) {
+            if (ghost.style.border.length > 1 && ghost.style.border.includes('none') == false) {
+                ghost.style.backgroundColor = 'var(--secondary_color)';
+                ghostSelection.push(ghost.querySelector('h4').innerHTML);
+            }
+            else {
+                //Deselect it:
+                ghost.style.backgroundColor = 'var(--main_color)';
+                ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
+            }
+        }
+    }
+
+    else if (mode == 'select_all') {
+        // selects all ghosts
+        for (let ghost of ghost_elements) {
             ghost.style.backgroundColor = 'var(--secondary_color)';
+            ghostSelection.push(ghost.querySelector('h4').innerHTML);
             ghost.style.border = 'none';
             ghost.style.padding = '10px'; //Reset the padding to normal
         }
@@ -271,65 +341,15 @@ function loadGhostTypes() {
         return parsedData
     }
     ghostsInfo = {
-        Banshee: {
-            color: "#6600cc",
-            text_color: "#FFFFFF",
-            evidence: ["dots", "orbs", "fingerprints"]
-        },
-        Demon: {
-            color: "#990000",
-            text_color: "#FF0000",
-            evidence: ["freezing", "writing", "fingerprints"]
-        },
-        Deogen: {
-            color: "#ffcc00",
+        Spirit: {
+            color: "#99ccff",
             text_color: "#000000",
-            evidence: ["dots", "writing", "spirit_box"]
+            evidence: ["writing", "emf_5", "spirit_box"]
         },
-        Goryo: {
-            color: "#66ff99",
-            text_color: "#FFFFFF",
-            evidence: ["dots", "emf_5", "fingerprints"]
-        },
-        Hantu: {
-            color: "#3399ff",
-            text_color: "#FFFFFF",
-            evidence: ["orbs", "freezing", "fingerprints"]
-        },
-        Jinn: {
-            color: "#ff9900",
-            text_color: "#FFFF00",
-            evidence: ["emf_5", "freezing", "fingerprints"]
-        },
-        Mare: {
-            color: "#993333",
-            text_color: "#FFFFFF",
-            evidence: ["writing", "orbs", "spirit_box"]
-        },
-        Moroi: {
-            color: "#cc00cc",
-            text_color: "#FFFFFF",
-            evidence: ["writing", "orbs", "spirit_box"]
-        },
-        Myling: {
-            color: "#ccffcc",
+        Wraith: {
+            color: "#00ffcc",
             text_color: "#000000",
-            evidence: ["writing", "emf_5", "fingerprints"]
-        },
-        Obake: {
-            color: "#ffcc99",
-            text_color: "#FFFFFF",
-            evidence: ["emf_5", "orbs", "fingerprints"]
-        },
-        Oni: {
-            color: "#cc6600",
-            text_color: "#FFA500",
-            evidence: ["dots", "emf_5", "freezing"]
-        },
-        Onryo: {
-            color: "#ff3366",
-            text_color: "#FFFFFF",
-            evidence: ["orbs", "freezing", "spirit_box"]
+            evidence: ["dots", "emf_5", "spirit_box"]
         },
         Phantom: {
             color: "#6666ff",
@@ -341,10 +361,20 @@ function loadGhostTypes() {
             text_color: "#000000",
             evidence: ["writing", "fingerprints", "spirit_box"]
         },
-        Raiju: {
-            color: "#33cc33",
+        Banshee: {
+            color: "#6600cc",
             text_color: "#FFFFFF",
-            evidence: ["dots", "emf_5", "orbs"]
+            evidence: ["dots", "orbs", "fingerprints"]
+        },
+        Jinn: {
+            color: "#ff9900",
+            text_color: "#FFFF00",
+            evidence: ["emf_5", "freezing", "fingerprints"]
+        },
+        Mare: {
+            color: "#993333",
+            text_color: "#FFFFFF",
+            evidence: ["writing", "orbs", "spirit_box"]
         },
         Revenant: {
             color: "#9900cc",
@@ -356,40 +386,80 @@ function loadGhostTypes() {
             text_color: "#FFFFFF",
             evidence: ["writing", "emf_5", "freezing"]
         },
-        Spirit: {
-            color: "#99ccff",
-            text_color: "#000000",
-            evidence: ["writing", "emf_5", "spirit_box"]
+        Demon: {
+            color: "#990000",
+            text_color: "#FF0000",
+            evidence: ["freezing", "writing", "fingerprints"]
         },
-        Thaye: {
-            color: "#ff6666",
+        Yurei: {
+            color: "#9999ff",
             text_color: "#FFFFFF",
-            evidence: ["dots", "writing", "orbs"]
+            evidence: ["dots", "orbs", "freezing"]
         },
-        "The Mimic": {
-            color: "#9966ff",
-            text_color: "#FFFFFF",
-            evidence: ["fingerprints", "freezing", "spirit_box"]
-        },
-        "The Twins": {
-            color: "#ff99cc",
-            text_color: "#000000",
-            evidence: ["dots", "writing", "spirit_box"]
-        },
-        Wraith: {
-            color: "#00ffcc",
-            text_color: "#000000",
-            evidence: ["dots", "emf_5", "spirit_box"]
+        Oni: {
+            color: "#cc6600",
+            text_color: "#FFA500",
+            evidence: ["dots", "emf_5", "freezing"]
         },
         Yokai: {
             color: "#ff3399",
             text_color: "#FFFFFF",
             evidence: ["dots", "orbs", "spirit_box"]
         },
-        Yurei: {
-            color: "#9999ff",
+        Hantu: {
+            color: "#3399ff",
             text_color: "#FFFFFF",
-            evidence: ["dots", "orbs", "freezing"]
+            evidence: ["orbs", "freezing", "fingerprints"]
+        },
+        Goryo: {
+            color: "#66ff99",
+            text_color: "#FFFFFF",
+            evidence: ["dots", "emf_5", "fingerprints"]
+        },
+        Myling: {
+            color: "#ccffcc",
+            text_color: "#000000",
+            evidence: ["writing", "emf_5", "fingerprints"]
+        },
+        Onryo: {
+            color: "#ff3366",
+            text_color: "#FFFFFF",
+            evidence: ["orbs", "freezing", "spirit_box"]
+        },
+        "The Twins": {
+            color: "#ff99cc",
+            text_color: "#000000",
+            evidence: ["dots", "writing", "spirit_box"]
+        },
+        Raiju: {
+            color: "#33cc33",
+            text_color: "#FFFFFF",
+            evidence: ["dots", "emf_5", "orbs"]
+        },
+        Obake: {
+            color: "#ffcc99",
+            text_color: "#FFFFFF",
+            evidence: ["emf_5", "orbs", "fingerprints"]
+        },
+        "The Mimic": {
+            color: "#9966ff",
+            text_color: "#FFFFFF",
+            evidence: ["fingerprints", "freezing", "spirit_box"]
+        },
+        Moroi: {
+            color: "#cc00cc",
+            text_color: "#FFFFFF",
+            evidence: ["writing", "orbs", "spirit_box"]
+        },
+        Deogen: {
+            color: "#ffcc00",
+            text_color: "#000000",
+            evidence: ["dots", "writing", "spirit_box"]
+        },
+        Thaye: {
+            color: "#ff6666",
+            text_color: "#FFFFFF",
+            evidence: ["dots", "writing", "orbs"]
         }
     };
 
@@ -441,7 +511,6 @@ function spinWheel() {
                 document.querySelector('.winning_ghost_text').innerHTML = `The winning ghost is ${ghost}!`;
 
                 setTimeout(function () {
-                    // console.log(`This ghost has won: ${ghost} \nWith ${lower} and ${upper}`);
                     let PopUpElement = document.querySelector('.PopUp');
                     let SettingsElement = document.querySelector('.Settings');
                     let WinningGhost_Text = document.querySelector('.winning_ghost_text');
@@ -496,7 +565,6 @@ function HidePopUp() {
             let clickedElement = document.elementFromPoint(mouseX, mouseY);
             if (clickedElement.classList.contains('triggers_wheel')) {
                 spinWheel();
-                console.log(clickedElement);
             }
         });
         document.onkeydown = function (key) {
@@ -1034,4 +1102,5 @@ window.onload = function () {
     document.querySelector('.aboutBTN').onclick = about;
     document.querySelector('.resetBTN').onclick = reset;
     document.querySelector('.settingsBTN').onclick = changesettings;
+    selectGhosts();
 };

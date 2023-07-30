@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.0.0)
+# Phasmophobia Ghost Casino (Version 1.1)
 
 This web-based program allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 
@@ -15,8 +15,13 @@ This web-based program allows you to select certain evidence or ghosts and spin 
 To use the app, visit this page: https://filipdominik.github.io/PhasmophobiaWheel/
 Alternatively, download all the files and run it locally.
 
+## Quick start:
+After starting the app for the first time, all ghosts are selected automatically. As there are more cases where you'll need to deselect ghosts than select them all.\
+I tried to make this program as intuitive as possible for all users.
+
 ## Buttons:
 - **Reset Page:** Quickly reset the page to default settings.
+- **Select Ghosts** Read [Select Ghosts](#select-ghosts)
 - **Change Settings:** Opens a menu to modify the page's settings and stored ghosts. Refer to the [Settings](#settings) section for more information.
 - **Share:** Share the current ghost setup with a link. If the app is hosted locally, remove the http://127.0.0.1:5500/(index.html) part and share the data starting with */?* to your friend.
 - **Save Setup:** Stores the current ghost settings and page settings in the browser's storage.
@@ -33,6 +38,12 @@ In the settings menu, you can change ghost information, remove ghosts, customize
 - **Remove Ghost:** Removes the ghost and prompts the user to confirm the action.
 
 Any changes made to the ghost, except removing it, will require confirmation by pressing the Save button at the bottom of the settings window.
+
+## Select Ghosts:
+This window is seperated into two segments; Evidence and Ghost Selection\
+In the evidence part you can select the evidence to filter out ghosts, this is the same as in Phasmophobia, even the lay-out is the same for the individuals that have muscle-memory.\
+When you press on an evidence item, the ghost that are falling under that filter get a border of the accent color.\
+When an item is selected, either evidence or a ghost. They turn into the secondary color. Which is by default the darker color.
 
 ## Issues:
 If you encounter an issue, please report it along with the following basic information:
