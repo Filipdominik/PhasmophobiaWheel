@@ -32,6 +32,7 @@ nav {
     display: flex;
     flex-direction: row;
     align-items: center;
+    z-index: 100;
 }
 
 nav>* {
@@ -80,6 +81,7 @@ main {
 .wheel {
     width: var(--circle_size);
     height: var(--circle_size);
+    border-radius: 100%;
     /* background-color: red; */
 }
 

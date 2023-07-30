@@ -1,7 +1,9 @@
 let ghostsInfo;
 let ghostsInfoTemp;
+let Evidence_Filter = [];
 let ghostSelection = [];
 let [mouseX, mouseY] = [];
+
 // Utility Functions
 function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
     let deltaX = Math.cos(piValue) * circlediameter;
@@ -29,7 +31,11 @@ function bytesToBase64(bytes) {
     return btoa(binString);
 }
 
+//End of utility functions
+
+
 function generateWheel(ghosts) {
+    // Draws a wheel and needle on the canvases.
     const WheelContainer = document.querySelector('.wheel');
     const canvas = WheelContainer.children[0];
     canvas.width = WheelContainer.offsetWidth;
@@ -37,9 +43,12 @@ function generateWheel(ghosts) {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const circleDiameter = Math.round(canvas.width * 2 / 5);
+
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    //first loop to check if the ghosts even exist in the ghostsInfo object.
+
+    //first loop to check if the ghosts even exist in the ghostsInfo object. 
+    // If it doesn't remove from the newly made list to ignore it.
     ghosts.forEach((ghostName, index) => {
         if (ghostSelection.includes(ghostName) == false) {
             ghostSelection.push(ghostName);
@@ -50,24 +59,36 @@ function generateWheel(ghosts) {
             ghosts.splice(index, 1);
         }
     });
-    //and then calculate the segment size for each ghost.
+
+    //After filtering the ghosts, calculate how big the segment sizes have got to be.
     const segmentSize = (2 * Math.PI) * 1 / ghosts.length;
 
     ghosts.forEach((ghostName, index) => {
+        //Iterate through each ghost, and draw a segment for each and add text.
+
+        // How this code works:
+        // It first draws a half circle (arc) on the outside of the circle, 
+        // then draws a triangle from both the ends of the circle to the center of the wheel.
+        // After that, it calculates the center line of the segment, and it calculates the middle point of it.
+        // Then it rotates the canvas to the middle point of the segment, and writes the ghost name there.
         const ghostInfo = ghostsInfo[ghostName];
         const iteration = index; // Segment index for calculations.
 
         ctx.beginPath();
+        //draw the half circle (arc).
         ctx.fillStyle = ghostInfo['color'];
         ctx.arc(centerX, centerY, circleDiameter, segmentSize * iteration, segmentSize * (iteration + 1));
 
-        ctx.moveTo(centerX, centerY);
+        ctx.moveTo(centerX, centerY); //move to the center to draw the triangle.
         const first_corner = CalculateCoordinates(segmentSize * iteration, circleDiameter, [centerX, centerY]);
         const second_corner = CalculateCoordinates(segmentSize * (iteration + 1), circleDiameter, [centerX, centerY]);
         ctx.lineTo(first_corner[0], first_corner[1]);
         ctx.lineTo(second_corner[0], second_corner[1]);
+        //draw the triangle.
         ctx.fill();
 
+
+        //Calculate the center point of the segment.
         const lowerDegree = Math.round(segmentSize * iteration * (180 / Math.PI) * 100) / 100;
         const upperDegree = Math.round(segmentSize * (iteration + 1) * (180 / Math.PI) * 100) / 100;
         ghostInfo['lower_degree'] = lowerDegree;
@@ -75,13 +96,13 @@ function generateWheel(ghosts) {
         const piValueInBetween = (segmentSize * iteration + segmentSize * (iteration + 1)) / 2;
         const [x, y] = CalculateCoordinates(piValueInBetween, circleDiameter / 1.4, [centerX, centerY]);
 
-        ctx.save();
-        ctx.fillStyle = ghostInfo['text_color'];
+        ctx.save(); //save the canvas state to restore it later on (this saves will reverse all the rotations and translations)
+        ctx.fillStyle = ghostInfo['text_color']; //Grab the text color for this ghost.
         ctx.textAlign = 'center';
         ctx.font = ghosts.length < 10 ? '30px Signika Negative' : '20px Signika Negative';
         ctx.translate(x, y);
         ctx.rotate(piValueInBetween);
-        ctx.fillText(ghostName, 0, 10);
+        ctx.fillText(ghostName, 0, 10); //Fill causes the text to be drawn.
         ctx.restore();
     });
 
@@ -93,20 +114,21 @@ function generateWheel(ghosts) {
     const nCtx = NeedleCanvas.getContext("2d");
 
     nCtx.beginPath();
-    nCtx.fillStyle = 'grey';
-
+    //draw the inner part of the needle.
     const [x, y] = [NeedleCanvas.width, NeedleCanvas.height];
     const xStart = Math.round(x / 2) - 21;
     const yStart = Math.round(y * 0.08);
     const xEnd = Math.round(x / 2) + 21;
     const yEnd = Math.round(y * 0.15);
 
+    nCtx.fillStyle = 'grey';
     nCtx.moveTo(xStart, yStart);
     nCtx.lineTo(Math.round((xStart + xEnd) / 2), yEnd);
     nCtx.lineTo(xEnd, yStart);
     nCtx.lineTo(xStart, yStart);
     nCtx.fill();
 
+    //Draw the outline of the needle for better contrast.
     nCtx.beginPath();
     nCtx.strokeStyle = 'DarkSlateGrey';
     nCtx.moveTo(xStart, yStart);
@@ -120,7 +142,6 @@ function selectGhosts() {
     //Shows the ghost selection screen and dynamically adds all the ghosts from ghostsInfo.
     let wheel_window = document.querySelector('.the_wheel');
     let ghost_selection_and_evidence_window = document.querySelector('.ghost_and_evidence_selection');
-    let evidence_selection_window = document.querySelector('.evidence_window');
     let ghost_selection_window = document.querySelector('.ghost_selection');
     let ghost_selection_and_evidence_BTN = document.querySelector('.selectGhostBTN');
 
@@ -147,50 +168,59 @@ function selectGhosts() {
                 ghostSelection.push(ghost.querySelector('h4').innerHTML);
             }
         }
-
         ghost_selection_and_evidence_window.style.display = 'none';
         wheel_window.style.display = 'flex';
-
         ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
         ghost_selection_and_evidence_BTN.onclick = selectGhosts;
         HidePopUp();
         generateWheel(ghostSelection);
     }
 
+    //Not so pretty, but it works, it clears the ghost selection window and adds all the ghosts from ghostsInfo.:
     ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div><div class='ghost'><h4></h4></div></div>";
-    let ghost_template = ghost_selection_window.querySelector('.ghost');
+    let ghost_template = ghost_selection_window.querySelector('.ghost'); //grab the inner div to clone it later on.
     ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div></div>";
+
     //iterate through all ghosts and add them to the ghost selection window.
     for (let [ghost, info] of Object.entries(ghostsInfo)) {
+        //info is in this case ignored, but it's there for future use.
         let duped_element = ghost_template.cloneNode(true);
         duped_element.querySelector('h4').innerHTML = ghost.replaceAll('_', ' ');
         duped_element.classList.add(ghost.replaceAll(' ', '_'));
 
         //Check if the ghost is already selected, if so, change the background color.
         if (ghostSelection.includes(ghost)) {
+            //if the ghost is selected.
             duped_element.style.backgroundColor = 'var(--secondary_color)';
         }
         else {
+            //else, if the ghost is not selected.
             duped_element.style.backgroundColor = 'var(--main_color)';
         }
 
         duped_element.onclick = function () {
             if (ghostSelection.includes(ghost)) {
+                //If the ghost is already selected, remove it from the selection.
                 ghostSelection.splice(ghostSelection.indexOf(ghost), 1);
                 duped_element.style.backgroundColor = 'var(--main_color)';
             }
             else {
+                //If the ghost is not selected, add it to the selection.
                 ghostSelection.push(ghost);
                 duped_element.style.backgroundColor = 'var(--secondary_color)';
             }
         }
+        //Add the newly created element to the ghost selection window.
         ghost_selection_window.querySelector('div').appendChild(duped_element);
     }
 }
 
-let Evidence_Filter = [];
 function FilterEvidence(evidence_type) {
+    //Filters the ghosts based on their evidence and the selected.
+
     let evidence_element = document.querySelector('.evidence_window').querySelector('div').querySelector('.' + evidence_type);
+    //Checks wheter the evidence is selected or not, and changes the background color accordingly.
+    // Also adds or removes the evidence from the Evidence_Filter array.    
     if (evidence_element.style.backgroundColor == 'var(--secondary_color)') {
         evidence_element.style.backgroundColor = 'var(--main_color)';
         Evidence_Filter.splice(Evidence_Filter.indexOf(evidence_type), 1);
@@ -199,38 +229,40 @@ function FilterEvidence(evidence_type) {
         evidence_element.style.backgroundColor = 'var(--secondary_color)';
         Evidence_Filter.push(evidence_type);
     }
+
     //Take the filter into effect:
     let ghost_selection = document.querySelector('.ghost_selection');
     for (let ghost of ghost_selection.querySelectorAll('.ghost')) {
+        //Go through each ghost, and check how much evidence it has that matches the filter.
         let ghost_name = ghost.querySelector('h4').innerHTML;
         let ghost_info = ghostsInfo[ghost_name];
         let evidence = ghost_info['evidence'];
         let evidence_found = 0;
+
         for (let evidence_type of evidence) {
+            //check how much evidence the ghost has that matches the filter.
             if (Evidence_Filter.includes(evidence_type)) {
                 evidence_found++;
             }
         }
+
         if (evidence_found >= Evidence_Filter.length) {
+            //if the ghost matches the filter (has all the evidence that is selected), show it by the border.
             ghost.style.border = '5px solid var(--accent_color)';
-            ghost.style.padding = '5px';
+            ghost.style.padding = '5px'; //It reduces the padding so that the element won't get bigger.
         }
         else {
-            if (ghostSelection.includes(ghost_name)) {
-                ghost.style.backgroundColor = 'var(--secondary_color)';
-                ghost.style.border = 'none';
-                ghost.style.padding = '10px';
-            }
-            else {
-                ghost.style.backgroundColor = 'var(--main_color)';
-                ghost.style.border = 'none';
-                ghost.style.padding = '10px';
-            }
+            //If the ghost doesn't match the filter, go back to regular styling.
+            ghost.style.backgroundColor = 'var(--secondary_color)';
+            ghost.style.border = 'none';
+            ghost.style.padding = '10px'; //Reset the padding to normal
         }
     }
 }
 
 function loadGhostTypes() {
+    //Loads the ghosts from storage, if they don't exist, it creates them.
+    // After a phasmophobia update, that adds or changes ghosts. Values in this array should be changed.
     let storedData = localStorage.getItem('ghosts');
     if (typeof (storedData) == 'string') {
         let parsedData = JSON.parse(localStorage.getItem('ghosts'));
@@ -389,6 +421,7 @@ function spinWheel() {
     }, SpinTime);
 
     const wheel = document.querySelector('.wheel');
+    if (wheel.classList.contains('spin')) return;
     var randomDegrees = Math.random() * 360;
     var Rotation = 3600 + randomDegrees;
     const WinningDegree = (1.5 * Math.PI) * (180 / Math.PI);
@@ -461,7 +494,10 @@ function HidePopUp() {
         document.querySelector('main').addEventListener("click", function () {
             //Check what element the mouse has clicked:
             let clickedElement = document.elementFromPoint(mouseX, mouseY);
-            console.log(clickedElement);
+            if (clickedElement.classList.contains('triggers_wheel')) {
+                spinWheel();
+                console.log(clickedElement);
+            }
         });
         document.onkeydown = function (key) {
             if (key.key == ' ') {
@@ -959,11 +995,14 @@ window.onload = function () {
         }
     }
 
-    document.querySelector('main').addEventListener("click", function () {
+    document.querySelector('main').addEventListener("click", function (event) {
         //Check what element the mouse has clicked:
         let clickedElement = document.elementFromPoint(mouseX, mouseY);
-        console.log(clickedElement);
+        if (clickedElement.classList.contains('triggers_wheel')) {
+            spinWheel();
+        }
     });
+
     document.onkeydown = function (key) {
         if (key.key == ' ') {
             spinWheel();
