@@ -177,7 +177,7 @@ function selectGhosts() {
             generateWheel(ghostSelection);
         }
         else{
-            alert("Please select at least 1 ghost before conineuing");
+            alert("Please select at least 1 ghost before continuing");
         }
     }
 
@@ -808,7 +808,6 @@ function SaveSettings() {
         HidePopUp();
         changesettings();
         document.querySelector('.Settings').scrollTop = 0;
-        document.querySelector('.')
         confirmElement.style.display = 'none';
         setTimeout(function () { generateWheel(ghostSelection) }, 200);
     }
@@ -862,6 +861,24 @@ function show_evidence(ghost) {
     cancel_button.onclick = function () {
         evidence_popup.style.display = 'none';
     }
+}
+
+function RevertColor(color){
+    //Reverts the color back to the current legit color.
+    let RootElement = getComputedStyle(document.documentElement);
+    let main_color = RootElement.getPropertyValue('--main_color');
+    let secondary_color = RootElement.getPropertyValue('--secondary_color');
+    let accent_color = RootElement.getPropertyValue('--accent_color');
+    let accent_color_negative = RootElement.getPropertyValue('--accent_color_negative');
+    let text_color = RootElement.getPropertyValue('--text_color');
+    let background_color = RootElement.getPropertyValue('--background_color');
+
+    if (color == 'main_color') document.querySelector('.main_color').value = main_color;
+    if (color == 'secondary_color') document.querySelector('.secondary_color').value = secondary_color;
+    if (color == 'accent_color') document.querySelector('.accent_color').value = accent_color;
+    if (color == 'accent_color_negative') document.querySelector('.accent_color_negative').value = accent_color_negative;
+    if (color == 'text_color') document.querySelector('.text_color').value = text_color;
+    if (color == 'background_color') document.querySelector('.background_color').value = background_color;
 }
 
 function UpdateEvidence(evidence_id) {

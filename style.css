@@ -359,7 +359,8 @@ table {
 }
 
 .page_colors {
-    width: 70%;
+    text-align: left;
+    width: 80%;
 }
 
 .setting_buttons {
