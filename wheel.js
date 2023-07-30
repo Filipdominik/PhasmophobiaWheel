@@ -168,12 +168,17 @@ function selectGhosts() {
                 ghostSelection.push(ghost.querySelector('h4').innerHTML);
             }
         }
-        ghost_selection_and_evidence_window.style.display = 'none';
-        wheel_window.style.display = 'flex';
-        ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
-        ghost_selection_and_evidence_BTN.onclick = selectGhosts;
-        HidePopUp();
-        generateWheel(ghostSelection);
+        if (ghostSelection.length > 0) {
+            ghost_selection_and_evidence_window.style.display = 'none';
+            wheel_window.style.display = 'flex';
+            ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
+            ghost_selection_and_evidence_BTN.onclick = selectGhosts;
+            HidePopUp();
+            generateWheel(ghostSelection);
+        }
+        else{
+            alert("Please select at least 1 ghost before conineuing");
+        }
     }
 
     //Not so pretty, but it works, it clears the ghost selection window and adds all the ghosts from ghostsInfo.:
@@ -817,6 +822,7 @@ function SaveSettings() {
 }
 
 function show_evidence(ghost) {
+    //Shows the select ghosts screen
     let evidence_popup = document.querySelector('.Select_Evidence');
     let evidence_info = evidence_popup.querySelector('.Current_Evidence');
     evidence_popup.querySelector('h1').innerHTML = `Select the evidence for ${ghost}`;
