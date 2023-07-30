@@ -12,7 +12,7 @@ This web-based program allows you to select certain evidence or ghosts and spin 
 
 # How to use the app:
 ## Launch it:
-To use the app, visit this page: https://filipdominik.github.io/PhasmophobiaWheel/
+To use the app, visit this page: https://filipdominik.github.io/PhasmophobiaWheel/ \
 Alternatively, download all the files and run it locally.
 
 ## Buttons:
@@ -39,6 +39,8 @@ If you encounter an issue, please report it along with the following basic infor
 - If the issue occurred after changing the ghosts' names or evidence:
   - **The share link** (if not working, open the console and share the dict **ghostsInfo** and **ghostSelection**)
   - **Event description** describing what you did before the issue occurred and your thoughts on the possible cause.
+- If it is related to something else:
+  - **Event description** describe as precise as you can what led to the issue that you're experience. I know this can be difficult, please don't be deterred by trying to go over the top with your description.
 
 ## Recommendations and Contributing:
 If you'd like to contribute to this project, please feel free to do so! You can open an issue and tag it with enhancements, describing what you want in detail. This will help me or any other contributors create the feature you desire.
