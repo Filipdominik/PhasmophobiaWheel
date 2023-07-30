@@ -33,6 +33,8 @@ nav {
     flex-direction: row;
     align-items: center;
     z-index: 100;
+    /* set transistion time for all changes to 1s */
+    transition: all 0.5s;
 }
 
 nav>* {
@@ -42,6 +44,11 @@ nav>* {
 nav>h1 {
     align-self: center;
     justify-self: left;
+}
+
+nav.hidden {
+    /* Move the navbar off the screen */
+    transform: translateY(-100%);
 }
 
 .buttons {
@@ -153,7 +160,6 @@ main {
     flex-direction: column;
     align-items: center;
     width: 40%;
-    height: 100%;
     background-color: var(--background_color);
 }
 
@@ -167,16 +173,18 @@ main {
     padding: 5px;
 }
 
-.evidence_selection_buttons{
-    display: flex;
+.evidence_selection_buttons>button {
+    margin: 10px;
+}
+
+.evidence_selection_buttons {
+    display: flex;  
     justify-content: center;
     align-items: center;
     width: 70%;
 }
 
-.evidence_selection_buttons > button{
-    margin: 10px;
-}
+/* Second half of the window with the ghosts */
 
 .ghost_selection {
     display: flex;

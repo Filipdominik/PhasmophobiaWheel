@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.1)
+# Phasmophobia Ghost Casino (Version 1.2)
 
 This web-based program allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 
@@ -40,13 +40,16 @@ In the settings menu, you can change ghost information, remove ghosts, customize
 Any changes made to the ghost, except removing it, will require confirmation by pressing the Save button at the bottom of the settings window.
 
 ## Select Ghosts:
-This window is seperated into two segments; Evidence and Ghost Selection\
-In the evidence part you can select the evidence to filter out ghosts, this is the same as in Phasmophobia, even the lay-out is the same for the individuals that have muscle-memory.\
-When you press on an evidence item, the ghost that are falling under that filter get a border of the accent color.\
-When an item is selected, either evidence or a ghost. They turn into the secondary color. Which is by default the darker color.
+This window is divided into two segments: Evidence and Ghost Selection.
+
+**Evidence Part:** In this section, you can choose the evidence to filter out ghosts. It works the same way as in Phasmophobia, and even the layout is familiar to those with muscle memory. When you click on an evidence item, the ghosts that match that filter will be highlighted with the accent color border.
+
+**Selection Indicator:** When you select an item, whether it's evidence or a ghost, it will be displayed with the secondary color. By default, the secondary color is a darker shade.
+
 
 ## Issues:
 If you encounter an issue, please report it along with the following basic information:
+**If you're using an ad-blocker it can cauase issues with ghost selection**
 - If the issue occurred after changing the ghosts' names or evidence:
   - **The share link** (if not working, open the console and share the dict **ghostsInfo** and **ghostSelection**)
   - **Event description** describing what you did before the issue occurred and your thoughts on the possible cause.

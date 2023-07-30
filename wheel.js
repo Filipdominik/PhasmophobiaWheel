@@ -157,7 +157,7 @@ function selectGhosts() {
     ghost_selection_and_evidence_window.style.display = 'flex';
 
     //Change the button text to go back to wheel.
-    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go Back';
+    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go Back to wheel';
     ghost_selection_and_evidence_BTN.style.display = 'default';
 
     //Save the selection, redo the event listeners that were removed and generate the wheel.
@@ -246,7 +246,7 @@ function FilterEvidence(evidence_type) {
             }
         }
 
-        if (evidence_found >= Evidence_Filter.length) {
+        if (evidence_found >= Evidence_Filter.length && Evidence_Filter.length > 0) {
             //if the ghost matches the filter (has all the evidence that is selected), show it by the border.
             ghost.style.border = '5px solid var(--accent_color)';
             ghost.style.padding = '5px'; //It reduces the padding so that the element won't get bigger.
@@ -278,6 +278,7 @@ function Filter_Selection(mode) {
         for (let evidence of evidence_elements) {
             evidence.style.backgroundColor = 'var(--main_color)';
         }
+        Evidence_Filter = [];
     }
 
     else if (mode == 'clear_all') {
@@ -292,6 +293,7 @@ function Filter_Selection(mode) {
             ghost.style.padding = '10px'; //Reset the padding to normal
             ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
         }
+        Evidence_Filter = [];
     }
 
     else if (mode == 'clear_selection') {
@@ -480,6 +482,7 @@ function TranslateEvidence(evidence) {
 
 function spinWheel() {
     document.querySelector('main').removeEventListener("click", spinWheel);
+    document.querySelector('nav').classList.add('hidden');
     document.onkeydown = '';
     let SpinTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
     setTimeout(function () {
@@ -554,6 +557,7 @@ function spinWheel() {
 }
 
 function HidePopUp() {
+    document.querySelector('nav').classList.remove('hidden');
     document.querySelector('.PopUp').style.display = 'none';
     const wheel = document.querySelector('.wheel');
     generateWheel(ghostSelection);
