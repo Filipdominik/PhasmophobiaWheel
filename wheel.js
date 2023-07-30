@@ -153,6 +153,7 @@ function selectGhosts() {
 
         ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
         ghost_selection_and_evidence_BTN.onclick = selectGhosts;
+        HidePopUp();
         generateWheel(ghostSelection);
     }
 
@@ -184,6 +185,48 @@ function selectGhosts() {
             }
         }
         ghost_selection_window.querySelector('div').appendChild(duped_element);
+    }
+}
+
+let Evidence_Filter = [];
+function FilterEvidence(evidence_type) {
+    let evidence_element = document.querySelector('.evidence_window').querySelector('div').querySelector('.' + evidence_type);
+    if (evidence_element.style.backgroundColor == 'var(--secondary_color)') {
+        evidence_element.style.backgroundColor = 'var(--main_color)';
+        Evidence_Filter.splice(Evidence_Filter.indexOf(evidence_type), 1);
+    }
+    else {
+        evidence_element.style.backgroundColor = 'var(--secondary_color)';
+        Evidence_Filter.push(evidence_type);
+    }
+    //Take the filter into effect:
+    let ghost_selection = document.querySelector('.ghost_selection');
+    for (let ghost of ghost_selection.querySelectorAll('.ghost')) {
+        let ghost_name = ghost.querySelector('h4').innerHTML;
+        let ghost_info = ghostsInfo[ghost_name];
+        let evidence = ghost_info['evidence'];
+        let evidence_found = 0;
+        for (let evidence_type of evidence) {
+            if (Evidence_Filter.includes(evidence_type)) {
+                evidence_found++;
+            }
+        }
+        if (evidence_found >= Evidence_Filter.length) {
+            ghost.style.border = '5px solid var(--accent_color)';
+            ghost.style.padding = '5px';
+        }
+        else {
+            if (ghostSelection.includes(ghost_name)) {
+                ghost.style.backgroundColor = 'var(--secondary_color)';
+                ghost.style.border = 'none';
+                ghost.style.padding = '10px';
+            }
+            else {
+                ghost.style.backgroundColor = 'var(--main_color)';
+                ghost.style.border = 'none';
+                ghost.style.padding = '10px';
+            }
+        }
     }
 }
 
@@ -354,13 +397,16 @@ function spinWheel() {
     ghostSelection.forEach((ghost) => {
         info = ghostsInfo[ghost];
         var [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
+
         if (lower > 360) {
             lower -= 360;
             upper -= 360;
         }
+
         if (lower != undefined) {
             if (WinningDegree > lower && WinningDegree < upper) {
                 document.querySelector('.winning_ghost_text').innerHTML = `The winning ghost is ${ghost}!`;
+
                 setTimeout(function () {
                     // console.log(`This ghost has won: ${ghost} \nWith ${lower} and ${upper}`);
                     let PopUpElement = document.querySelector('.PopUp');
@@ -373,9 +419,9 @@ function spinWheel() {
                     PopUpElement.style.display = 'flex';
                     PopUpElement.onclick = HidePopUp;
                     PopUpElement.style.cursor = 'cursor';
+                    Evidence_Div.style.display = 'flex';
 
                     let [Evidence1, Evidence2, Evidence3] = info['evidence'];
-
                     let [Evidence1Image, Evidence1Text] = Evidence_Div.querySelector('.evidence_1').children;
                     let [Evidence2Image, Evidence2Text] = Evidence_Div.querySelector('.evidence_2').children;
                     let [Evidence3Image, Evidence3Text] = Evidence_Div.querySelector('.evidence_3').children;
@@ -412,7 +458,11 @@ function HidePopUp() {
     wheel.classList.add('rotate');
     wheel.classList.remove('spin');
     setTimeout(function () {
-        document.querySelector('main').addEventListener("click", spinWheel);
+        document.querySelector('main').addEventListener("click", function () {
+            //Check what element the mouse has clicked:
+            let clickedElement = document.elementFromPoint(mouseX, mouseY);
+            console.log(clickedElement);
+        });
         document.onkeydown = function (key) {
             if (key.key == ' ') {
                 spinWheel();
@@ -645,6 +695,7 @@ function SaveSettings() {
         HidePopUp();
         changesettings();
         document.querySelector('.Settings').scrollTop = 0;
+        document.querySelector('.')
         confirmElement.style.display = 'none';
         setTimeout(function () { generateWheel(ghostSelection) }, 200);
     }
@@ -841,6 +892,7 @@ function SaveSetup() {
     let WinningGhost_Text = document.querySelector('.winning_ghost_text');
     WinningGhost_Text.style.display = 'block';
     WinningGhost_Text.innerHTML = 'Settings saved!';
+    WinningGhost_Text.parentElement.querySelector('.winning_ghost_evidence').style.display = 'none';
     SettingsElement.style.display = 'none';
     PopUpElement.style.display = 'flex';
     PopUpElement.onclick = HidePopUp;
@@ -907,7 +959,11 @@ window.onload = function () {
         }
     }
 
-    document.querySelector('main').addEventListener("click", spinWheel);
+    document.querySelector('main').addEventListener("click", function () {
+        //Check what element the mouse has clicked:
+        let clickedElement = document.elementFromPoint(mouseX, mouseY);
+        console.log(clickedElement);
+    });
     document.onkeydown = function (key) {
         if (key.key == ' ') {
             spinWheel();

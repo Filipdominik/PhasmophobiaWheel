@@ -54,21 +54,15 @@ nav>h1 {
     color: var(--text_color);
     border: none;
     border-radius: 5px;
-    padding: 15px;
-    /* Increased padding */
+    padding: 10px;
     font-size: 1.2rem;
-    line-height: 1.2;
-    /* Added line-height */
     cursor: pointer;
     transition: all 0.5s;
-    box-sizing: border-box;
-    /* Added box-sizing */
 }
 
 .button:hover {
     background-color: var(--secondary_color);
 }
-
 
 .remove_ghost {
     background-color: var(--accent_color_negative);
@@ -159,6 +153,16 @@ main {
     width: 40%;
     height: 100%;
     background-color: var(--background_color);
+}
+
+.evidence_window>div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.evidence {
+    background-color: var(--main_color);
+    padding: 5px;
 }
 
 .ghost_selection {
