@@ -13,6 +13,19 @@ const hexToRGB = hex => {
     return `${r},${g},${b}`;
 };
 
+function DisableNavButtons(){
+    const NavChildren = document.querySelector('.buttons').children;
+    for (let child of NavChildren){
+        child.style.pointerEvents = 'none';
+    }
+}
+
+function RestoreNavButtons(){
+    const NavChildren = document.querySelector('.buttons').children;
+    for (let child of NavChildren){
+        child.style.pointerEvents = 'auto';
+    }
+}
 
 function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
     let deltaX = Math.cos(piValue) * circlediameter;
@@ -508,6 +521,7 @@ function TranslateEvidence(evidence) {
 }
 
 function spinWheel() {
+    DisableNavButtons();
     document.querySelector('main').removeEventListener("click", spinWheel);
     document.querySelector('nav').classList.add('hidden');
     document.onkeydown = '';
@@ -573,7 +587,6 @@ function spinWheel() {
                     else {
                         Evidence_Orbs.style.display = 'none';
                     }
-
                 }, spinspeed);
             }
         }
@@ -603,6 +616,7 @@ function HidePopUp() {
                 spinWheel();
             }
         }
+        RestoreNavButtons();
     }, 100);
 }
 
@@ -1085,6 +1099,7 @@ function WriteParameters() {
 
 window.onload = function () {
     if (document.location.search.length > 2) {
+        //Check if the URL Contains data.
         console.log("Loaded from URL");
         let [data, selection] = ReadParameters();
         ghostsInfo = JSON.parse(data);
@@ -1094,12 +1109,13 @@ window.onload = function () {
         //Attempt to load ghostSelection from storage:
         ghostSelectionText = localStorage.getItem('selection');
         if (typeof (ghostSelectionText) != "string") {
+            // if no data is stored in the storage, load the default ghosts.
             console.log("Loaded new");
             ghostsInfo = loadGhostTypes();
             generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
         }
         else {
-            //Load the ghostInfo from storage
+            //If there's info in storage, load that.
             let ghostInfoText = localStorage.getItem('data');
             if (typeof (ghostInfoText) != 'string') {
                 ghostsInfo = loadGhostTypes();
@@ -1122,18 +1138,19 @@ window.onload = function () {
     });
 
     document.onkeydown = function (key) {
+        //if spacebar is clickd, spin the wheel
         if (key.key == ' ') {
             spinWheel();
         }
     }
 
     window.onmousemove = function (event) {
-        //For the confirm box inside of the PopUp.
+        //To get the mouse position for smaller windows that need to pop up near the mouse.
         mouseX = event.clientX;
         mouseY = event.clientY;
     }
 
-    //Load colors from storage, if it exits.
+    //Load colors from storage, if they exits.
     let storedColors = localStorage.getItem('pageColors');
     if (typeof (storedColors) == 'string') {
         let parsedColors = JSON.parse(storedColors);
@@ -1152,5 +1169,13 @@ window.onload = function () {
     document.querySelector('.aboutBTN').onclick = about;
     document.querySelector('.resetBTN').onclick = reset;
     document.querySelector('.settingsBTN').onclick = changesettings;
-    selectGhosts();
+    selectGhosts(); //By default, move to the ghost selection window.
+
+    document.onclick = function () {
+        //If the user clicks on a button, blur it so that it won't be selected and triggerd later on by the spacebar.
+        const active_Element = document.activeElement;
+        if (active_Element.classList.contains('button')){
+            active_Element.blur();
+        }
+    }
 };

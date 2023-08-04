@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.4.1)
+# Phasmophobia Ghost Casino (Version 1.4.2)
 
 Phasmophobia Ghost Casino is a web-based program that allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 

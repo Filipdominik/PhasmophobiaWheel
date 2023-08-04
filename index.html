@@ -30,7 +30,8 @@
             <button class="saveBTN button" tabindex="-1" title="Save the current settings" onclick=SaveSetup()>Save
                 setup</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
-            <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>Help &
+            <button class="aboutBTN button" tabindex="-1" title="About this page (redirect to github.com)"
+                onclick=about()>Help &
                 About</button>
         </div>
     </nav>
@@ -220,7 +221,8 @@
                             <input class="secondary_color color_picker" type="color"></input>
                         </td>
                         <td>
-                            <input class="secondary_color_revert button" type="button" value="Revert" onclick="RevertColor('secondary_color')"></input>
+                            <input class="secondary_color_revert button" type="button" value="Revert"
+                                onclick="RevertColor('secondary_color')"></input>
                         </td>
                     </tr>
                     <tr>
