@@ -388,7 +388,7 @@ table {
     accent-color: var(--accent_color);
 }
 
-/* For the ghost selection window, showing if the ghost is either selected, deselcted or filtered */
+/* For the ghost selection window, showing if the ghost is either selected, deselcted or is filtered */
 .Selected {
     background-color: var(--secondary_color);
     border: 5px solid darkgray;

@@ -342,7 +342,7 @@ function Filter_Selection(mode) {
                 ghostSelection.push(ghost.querySelector('h4').innerHTML);
             }
             else {
-                //If it doesn't deselect it:
+                //If the ghost is not filtered doesn't deselect it:
                 ghost.classList.remove('Selected');
                 ghost.classList.add('Deselcted');
                 ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
