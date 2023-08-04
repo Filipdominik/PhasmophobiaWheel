@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.3)
+# Phasmophobia Ghost Casino (Version 1.4)
 
 Phasmophobia Ghost Casino is a web-based program that allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 
@@ -6,7 +6,7 @@ Phasmophobia Ghost Casino is a web-based program that allows you to select certa
 
 ## Launch it:
 
-To use the app, visit this page: [PhasmophobiaWheel](https://filipdominik.github.io/PhasmophobiaWheel/)
+To use the app, visit this page: https://filipdominik.github.io/PhasmophobiaWheel/
 
 Alternatively, download all the files and run it locally.
 
@@ -16,9 +16,11 @@ After starting the app for the first time, all ghosts are selected automatically
 
 ### Buttons Legend:
 
-![selected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/603a9de9-f411-4dbd-9f29-e4c0597416cb)
-![deselected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/d94e3ede-471c-4f91-ae55-39d86a7aea81)
-![selected_filtered](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/9a11a5d4-1ae8-447e-adec-aecad651966a)
+
+
+
+
+
 
 ## Buttons:
 
