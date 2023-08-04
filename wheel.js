@@ -1062,18 +1062,22 @@ function SaveSetup() {
     localStorage.setItem('pageColors', JSON.stringify(pageColors));
 
     //Show PopUp for 2 seconds to let the user know their settings were saved.
-    let PopUpElement = document.querySelector('.PopUp');
-    let SettingsElement = document.querySelector('.Settings');
-    let WinningGhost_Text = document.querySelector('.winning_ghost_text');
+    const SettingsElement = document.querySelector('.Settings');
+    const PopUpElement = document.querySelector('.PopUp');
+    const WinningGhost_Text = document.querySelector('.winning_ghost_text');
+
+    WinningGhost_Text.parentElement.style.display = 'flex';
     WinningGhost_Text.style.display = 'block';
     WinningGhost_Text.innerHTML = 'Settings saved!';
+
     WinningGhost_Text.parentElement.querySelector('.winning_ghost_evidence').style.display = 'none';
+
     SettingsElement.style.display = 'none';
     PopUpElement.style.display = 'flex';
     PopUpElement.onclick = HidePopUp;
     PopUpElement.style.cursor = 'cursor';
     setTimeout(function () {
-        HidePopUp();
+        // HidePopUp();
     }, 2000);
 }
 
@@ -1178,11 +1182,11 @@ window.onload = function () {
     document.querySelector('.aboutBTN').onclick = about;
     document.querySelector('.resetBTN').onclick = reset;
     document.querySelector('.settingsBTN').onclick = changesettings;
-    
+
     selectGhosts();
     if (GoToSelect_Window == false) {
         HideSelectGhosts();
-    } 
+    }
 
     document.onclick = function () {
         //If the user clicks on a button, blur it so that it won't be selected and triggerd later on by the spacebar.
