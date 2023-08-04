@@ -211,6 +211,7 @@ main {
     /* background-color: var(--main_color); */
     text-align: center;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .ghost:hover {

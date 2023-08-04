@@ -323,7 +323,6 @@ function Filter_Selection(mode) {
     else if (mode == 'clear_selection') {
         //Deselects only the ghosts.
         for (let ghost of ghost_elements) {
-            ghost.classList.remove('Unfiltered');
             ghost.classList.remove('Selected');
             ghost.classList.add('Deselcted');
             //remove the ghost from the selection list
@@ -355,7 +354,6 @@ function Filter_Selection(mode) {
         for (let ghost of ghost_elements) {
             ghost.classList.add('Selected');
             ghost.classList.remove('Deselcted');
-            ghost.classList.remove('Unfiltered');
             ghostSelection.push(ghost.querySelector('h4').innerHTML);
         }
     }
