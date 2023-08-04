@@ -1077,7 +1077,7 @@ function SaveSetup() {
     PopUpElement.onclick = HidePopUp;
     PopUpElement.style.cursor = 'cursor';
     setTimeout(function () {
-        // HidePopUp();
+        HidePopUp();
     }, 2000);
 }
 
