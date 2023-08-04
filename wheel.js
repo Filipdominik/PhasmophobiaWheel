@@ -13,16 +13,16 @@ const hexToRGB = hex => {
     return `${r},${g},${b}`;
 };
 
-function DisableNavButtons(){
+function DisableNavButtons() {
     const NavChildren = document.querySelector('.buttons').children;
-    for (let child of NavChildren){
+    for (let child of NavChildren) {
         child.style.pointerEvents = 'none';
     }
 }
 
-function RestoreNavButtons(){
+function RestoreNavButtons() {
     const NavChildren = document.querySelector('.buttons').children;
-    for (let child of NavChildren){
+    for (let child of NavChildren) {
         child.style.pointerEvents = 'auto';
     }
 }
@@ -36,9 +36,9 @@ function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
 function getRotationAngle(target) {
     const obj = window.getComputedStyle(document.querySelector(target), null);
     const matrix = obj.getPropertyValue('transform');
-    var values = matrix.split('(')[1];
+    let values = matrix.split('(')[1];
     let [a, b] = values.split(')')[0].split(',');
-    var angle = Math.atan2(b, a) * (180 / Math.PI);
+    let angle = Math.atan2(b, a) * (180 / Math.PI);
     angle = Math.round((angle < 0 ? angle + 360 : angle) * 100) / 100;
     return angle;
 }
@@ -160,6 +160,31 @@ function generateWheel(ghosts) {
     nCtx.stroke();
 }
 
+function HideSelectGhosts() {
+    let wheel_window = document.querySelector('.the_wheel');
+    let ghost_selection_and_evidence_window = document.querySelector('.ghost_and_evidence_selection');
+    let ghost_selection_window = document.querySelector('.ghost_selection');
+    let ghost_selection_and_evidence_BTN = document.querySelector('.selectGhostBTN');
+    ghostSelection = [];
+    for (let ghost of ghost_selection_window.querySelectorAll('.ghost')) {
+        //If the ghost is selected:
+        if (ghost.classList.contains('Selected')) {
+            ghostSelection.push(ghost.querySelector('h4').innerHTML);
+        }
+    }
+    if (ghostSelection.length > 0) {
+        ghost_selection_and_evidence_window.style.display = 'none';
+        wheel_window.style.display = 'flex';
+        ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
+        ghost_selection_and_evidence_BTN.onclick = selectGhosts;
+        HidePopUp();
+        generateWheel(ghostSelection);
+    }
+    else {
+        alert("Please select at least 1 ghost before continuing");
+    }
+}
+
 function selectGhosts() {
     //Shows the ghost selection screen and dynamically adds all the ghosts from ghostsInfo.
     let wheel_window = document.querySelector('.the_wheel');
@@ -179,30 +204,11 @@ function selectGhosts() {
     ghost_selection_and_evidence_window.style.display = 'flex';
 
     //Change the button text to go back to wheel.
-    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go Back to wheel';
+    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go to wheel';
     ghost_selection_and_evidence_BTN.style.display = 'default';
 
     //Save the selection, redo the event listeners that were removed and generate the wheel.
-    ghost_selection_and_evidence_BTN.onclick = function () {
-        ghostSelection = [];
-        for (let ghost of ghost_selection_window.querySelectorAll('.ghost')) {
-            //If the ghost is selected:
-            if (ghost.classList.contains('Selected')) {
-                ghostSelection.push(ghost.querySelector('h4').innerHTML);
-            }
-        }
-        if (ghostSelection.length > 0) {
-            ghost_selection_and_evidence_window.style.display = 'none';
-            wheel_window.style.display = 'flex';
-            ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
-            ghost_selection_and_evidence_BTN.onclick = selectGhosts;
-            HidePopUp();
-            generateWheel(ghostSelection);
-        }
-        else {
-            alert("Please select at least 1 ghost before continuing");
-        }
-    }
+    ghost_selection_and_evidence_BTN.onclick = HideSelectGhosts;
 
     //Not so pretty, but it works, it clears the ghost selection window and adds all the ghosts from ghostsInfo.:
     ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div><div class='ghost'><h4></h4></div></div>";
@@ -247,7 +253,6 @@ function selectGhosts() {
 
 function FilterEvidence(evidence_type) {
     //Filters the ghosts based on the selection and ghosts evidence.
-
     let evidence_element = document.querySelector('.evidence_window').querySelector('div').querySelector('.' + evidence_type);
     //Checks wheter the evidence is selected or not, and changes the background color accordingly.
     // Also adds or removes the evidence from the Evidence_Filter array.    
@@ -536,14 +541,14 @@ function spinWheel() {
 
     const wheel = document.querySelector('.wheel');
     if (wheel.classList.contains('spin')) return;
-    var randomDegrees = Math.random() * 360;
-    var Rotation = 3600 + randomDegrees;
-    const WinningDegree = (1.5 * Math.PI) * (180 / Math.PI);
-    var spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
+    let randomDegrees = Math.random() * 360;
+    let Rotation = (0.72) * SpinTime + randomDegrees;
+    const WinningDegree = 270 //Pre calculated from (1.5 * Math.PI) * (180 / Math.PI);
+    let spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
 
     ghostSelection.forEach((ghost) => {
         info = ghostsInfo[ghost];
-        var [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
+        let [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
 
         if (lower > 360) {
             lower -= 360;
@@ -552,7 +557,9 @@ function spinWheel() {
 
         if (lower != undefined) {
             if (WinningDegree > lower && WinningDegree < upper) {
-                document.querySelector('.winning_ghost_text').innerHTML = `The winning ghost is ${ghost}!`;
+                document.querySelector('.winning_ghost_text').innerHTML =
+                    `The winning ghost ${ghost.slice(-1) === 's' ? 'are' : 'is'} ${ghost}!`;
+
 
                 setTimeout(function () {
                     let PopUpElement = document.querySelector('.PopUp');
@@ -892,7 +899,7 @@ function show_evidence(ghost) {
         evidence_popup.style.display = 'none';
         //Chage the evidence_popup button color to let the user know something here was changed
         let showEvidence_button = document.querySelector('.' + ghost.replaceAll(' ', '_')).querySelector('.evidence_popup');
-        showEvidence_button.style.border = '5px solid var(--secondary_color)'; //Change the borders color to the variable
+        showEvidence_button.style.border = '5px solid let(--secondary_color)'; //Change the borders color to the letiable
         showEvidence_button.style.padding = '5px'; //Reduce the padding size so that the button won't get bigger and move everything.
     }
     cancel_button.onclick = function () {
@@ -1098,6 +1105,7 @@ function WriteParameters() {
 }
 
 window.onload = function () {
+    let GoToSelect_Window = false;
     if (document.location.search.length > 2) {
         //Check if the URL Contains data.
         console.log("Loaded from URL");
@@ -1113,6 +1121,7 @@ window.onload = function () {
             console.log("Loaded new");
             ghostsInfo = loadGhostTypes();
             generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
+            GoToSelect_Window = true;
         }
         else {
             //If there's info in storage, load that.
@@ -1169,12 +1178,16 @@ window.onload = function () {
     document.querySelector('.aboutBTN').onclick = about;
     document.querySelector('.resetBTN').onclick = reset;
     document.querySelector('.settingsBTN').onclick = changesettings;
-    selectGhosts(); //By default, move to the ghost selection window.
+    
+    selectGhosts();
+    if (GoToSelect_Window == false) {
+        HideSelectGhosts();
+    } 
 
     document.onclick = function () {
         //If the user clicks on a button, blur it so that it won't be selected and triggerd later on by the spacebar.
         const active_Element = document.activeElement;
-        if (active_Element.classList.contains('button')){
+        if (active_Element.classList.contains('button')) {
             active_Element.blur();
         }
     }
