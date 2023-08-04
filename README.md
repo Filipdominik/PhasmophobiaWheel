@@ -16,11 +16,9 @@ After starting the app for the first time, all ghosts are selected automatically
 
 ### Buttons Legend:
 
-
-
-
-
-
+![selected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/603a9de9-f411-4dbd-9f29-e4c0597416cb)
+![deselected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/d94e3ede-471c-4f91-ae55-39d86a7aea81)
+![selected_filtered](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/9a11a5d4-1ae8-447e-adec-aecad651966a)
 
 ## Buttons:
 
