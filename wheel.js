@@ -319,6 +319,8 @@ function Filter_Selection(mode) {
             evidence.style.backgroundColor = 'var(--main_color)';
         }
         Evidence_Filter = [];
+        FilterEvidence('emf_5'); //Called twice to update the evidence filter.
+        FilterEvidence('emf_5');
     }
 
     else if (mode == 'clear_all') {

@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.4.8)
+# Phasmophobia Ghost Casino (Version 1.4.9)
 
 Phasmophobia Ghost Casino is a web-based program that allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 
@@ -91,10 +91,10 @@ If you'd like to contribute to this project, please feel free to do so! You can 
 
 If you want to contribute, just do your best. I'm a beginner with HTML5 and JavaScript. You can also review the code and suggest improvements.
 
-## Read this about future-proofing:
+# Read this about future-proofing:
 
 In case new ghosts are added to the game and I no longer have access to this repo, you can change the ghosts array in the function **function loadGhostTypes()** to match the new ghosts. After that, press the **Reset Page** button to get the newest version.
 
-### Credits:
+# Credits:
 
 Evidence image credit to [Phasmophobia Wiki - Evidence](https://phasmophobia.fandom.com/wiki/Evidence)
