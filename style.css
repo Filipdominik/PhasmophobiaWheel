@@ -1,4 +1,5 @@
 :root {
+    --transparent_main_color: rgba(139, 176, 249, 0.5);
     --main_color: #8bb0f9;
     --secondary_color: #072d88;
     --accent_color: #1bc123;
@@ -179,7 +180,7 @@ main {
 }
 
 .evidence_selection_buttons {
-    display: flex;  
+    display: flex;
     justify-content: center;
     align-items: center;
     width: 70%;
@@ -208,8 +209,10 @@ main {
     padding: 10px;
     margin: 10px;
     width: 60%;
-    background-color: var(--main_color);
+    /* background-color: var(--main_color); */
     text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .ghost:hover {
@@ -397,4 +400,26 @@ table {
 .font_size>input {
     width: 100%;
     accent-color: var(--accent_color);
+}
+
+/* For the ghost selection window, showing if the ghost is either selected, deselcted or is filtered */
+.Selected {
+    background-color: var(--secondary_color);
+    border: 5px solid darkgray;
+    padding: 5px;
+}
+
+.Unfiltered {
+    background-color: var(--transparent_main_color) !important;
+}
+
+.Unfiltered > *{
+    color:rgba(0, 0, 0, 0.5) !important;
+    text-decoration: line-through;
+}
+
+.Deselcted {
+    background-color: var(--secondary_color);
+    border: none;
+    padding: 10px;
 }

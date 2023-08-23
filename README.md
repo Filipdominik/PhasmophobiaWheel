@@ -1,4 +1,4 @@
-# Phasmophobia Ghost Casino (Version 1.3)
+# Phasmophobia Ghost Casino (Version 1.4.9)
 
 Phasmophobia Ghost Casino is a web-based program that allows you to select certain evidence or ghosts and spin a wheel to randomly choose a ghost. The project was inspired by Insym's Ghost Casino series. Please note that version 1.0.0 was developed within a week, so expect bugs, and kindly report them.
 
@@ -6,7 +6,7 @@ Phasmophobia Ghost Casino is a web-based program that allows you to select certa
 
 ## Launch it:
 
-To use the app, visit this page: [PhasmophobiaWheel](https://filipdominik.github.io/PhasmophobiaWheel/)
+To use the app, visit this page: https://filipdominik.github.io/PhasmophobiaWheel/
 
 Alternatively, download all the files and run it locally.
 
@@ -16,9 +16,10 @@ After starting the app for the first time, all ghosts are selected automatically
 
 ### Buttons Legend:
 
-![selected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/603a9de9-f411-4dbd-9f29-e4c0597416cb)
-![deselected](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/d94e3ede-471c-4f91-ae55-39d86a7aea81)
-![selected_filtered](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/9a11a5d4-1ae8-447e-adec-aecad651966a)
+![selectdunfil](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/2b19a14a-084f-4e78-90ea-c1df70864bb0)
+![desel filtered applied](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/bc4d3c03-9cad-46e4-9bc6-53ec52675b3f)
+![selunfilter](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/c6dfaac2-bdca-4db2-972a-35c948c7dd6f)
+![desel unfiltered](https://github.com/Filipdominik/PhasmophobiaWheel/assets/57330830/3789c382-83e9-4848-aad1-717962a9767a)
 
 ## Buttons:
 
@@ -90,10 +91,10 @@ If you'd like to contribute to this project, please feel free to do so! You can 
 
 If you want to contribute, just do your best. I'm a beginner with HTML5 and JavaScript. You can also review the code and suggest improvements.
 
-## Read this about future-proofing:
+# Read this about future-proofing:
 
 In case new ghosts are added to the game and I no longer have access to this repo, you can change the ghosts array in the function **function loadGhostTypes()** to match the new ghosts. After that, press the **Reset Page** button to get the newest version.
 
-### Credits:
+# Credits:
 
 Evidence image credit to [Phasmophobia Wiki - Evidence](https://phasmophobia.fandom.com/wiki/Evidence)

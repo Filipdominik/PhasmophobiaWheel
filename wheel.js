@@ -5,6 +5,28 @@ let ghostSelection = [];
 let [mouseX, mouseY] = [];
 
 // Utility Functions
+const hexToRGB = hex => {
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `${r},${g},${b}`;
+};
+
+function DisableNavButtons() {
+    const NavChildren = document.querySelector('.buttons').children;
+    for (let child of NavChildren) {
+        child.style.pointerEvents = 'none';
+    }
+}
+
+function RestoreNavButtons() {
+    const NavChildren = document.querySelector('.buttons').children;
+    for (let child of NavChildren) {
+        child.style.pointerEvents = 'auto';
+    }
+}
+
 function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
     let deltaX = Math.cos(piValue) * circlediameter;
     let deltaY = Math.sin(piValue) * circlediameter;
@@ -14,9 +36,9 @@ function CalculateCoordinates(piValue, circlediameter, zeroPoint) {
 function getRotationAngle(target) {
     const obj = window.getComputedStyle(document.querySelector(target), null);
     const matrix = obj.getPropertyValue('transform');
-    var values = matrix.split('(')[1];
+    let values = matrix.split('(')[1];
     let [a, b] = values.split(')')[0].split(',');
-    var angle = Math.atan2(b, a) * (180 / Math.PI);
+    let angle = Math.atan2(b, a) * (180 / Math.PI);
     angle = Math.round((angle < 0 ? angle + 360 : angle) * 100) / 100;
     return angle;
 }
@@ -142,6 +164,31 @@ function generateWheel(ghosts) {
     nCtx.stroke();
 }
 
+function HideSelectGhosts() {
+    let wheel_window = document.querySelector('.the_wheel');
+    let ghost_selection_and_evidence_window = document.querySelector('.ghost_and_evidence_selection');
+    let ghost_selection_window = document.querySelector('.ghost_selection');
+    let ghost_selection_and_evidence_BTN = document.querySelector('.selectGhostBTN');
+    ghostSelection = [];
+    for (let ghost of ghost_selection_window.querySelectorAll('.ghost')) {
+        //If the ghost is selected:
+        if (ghost.classList.contains('Selected')) {
+            ghostSelection.push(ghost.querySelector('h4').innerHTML);
+        }
+    }
+    if (ghostSelection.length > 0) {
+        ghost_selection_and_evidence_window.style.display = 'none';
+        wheel_window.style.display = 'flex';
+        ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
+        ghost_selection_and_evidence_BTN.onclick = selectGhosts;
+        HidePopUp();
+        generateWheel(ghostSelection);
+    }
+    else {
+        alert("Please select at least 1 ghost before continuing");
+    }
+}
+
 function selectGhosts() {
     //Shows the ghost selection screen and dynamically adds all the ghosts from ghostsInfo.
     let wheel_window = document.querySelector('.the_wheel');
@@ -161,29 +208,11 @@ function selectGhosts() {
     ghost_selection_and_evidence_window.style.display = 'flex';
 
     //Change the button text to go back to wheel.
-    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go Back to wheel';
+    ghost_selection_and_evidence_BTN.innerHTML = 'Save & Go to wheel';
     ghost_selection_and_evidence_BTN.style.display = 'default';
 
     //Save the selection, redo the event listeners that were removed and generate the wheel.
-    ghost_selection_and_evidence_BTN.onclick = function () {
-        ghostSelection = [];
-        for (let ghost of ghost_selection_window.querySelectorAll('.ghost')) {
-            if (ghost.style.backgroundColor == 'var(--secondary_color)') {
-                ghostSelection.push(ghost.querySelector('h4').innerHTML);
-            }
-        }
-        if (ghostSelection.length > 0) {
-            ghost_selection_and_evidence_window.style.display = 'none';
-            wheel_window.style.display = 'flex';
-            ghost_selection_and_evidence_BTN.innerHTML = 'Select Ghosts';
-            ghost_selection_and_evidence_BTN.onclick = selectGhosts;
-            HidePopUp();
-            generateWheel(ghostSelection);
-        }
-        else{
-            alert("Please select at least 1 ghost before continuing");
-        }
-    }
+    ghost_selection_and_evidence_BTN.onclick = HideSelectGhosts;
 
     //Not so pretty, but it works, it clears the ghost selection window and adds all the ghosts from ghostsInfo.:
     ghost_selection_window.innerHTML = "<h1>Ghost Selection</h1><div><div class='ghost'><h4></h4></div></div>";
@@ -200,23 +229,25 @@ function selectGhosts() {
         //Check if the ghost is already selected, if so, change the background color.
         if (ghostSelection.includes(ghost)) {
             //if the ghost is selected.
-            duped_element.style.backgroundColor = 'var(--secondary_color)';
+            duped_element.classList.add('Selected');
         }
         else {
             //else, if the ghost is not selected.
-            duped_element.style.backgroundColor = 'var(--main_color)';
+            duped_element.classList.add('Deselcted');
         }
 
         duped_element.onclick = function () {
             if (ghostSelection.includes(ghost)) {
                 //If the ghost is already selected, remove it from the selection.
                 ghostSelection.splice(ghostSelection.indexOf(ghost), 1);
-                duped_element.style.backgroundColor = 'var(--main_color)';
+                duped_element.classList.remove('Selected');
+                duped_element.classList.add('Deselcted');
             }
             else {
                 //If the ghost is not selected, add it to the selection.
                 ghostSelection.push(ghost);
-                duped_element.style.backgroundColor = 'var(--secondary_color)';
+                duped_element.classList.add('Selected');
+                duped_element.classList.remove('Deselcted');
             }
         }
         //Add the newly created element to the ghost selection window.
@@ -226,10 +257,8 @@ function selectGhosts() {
 
 function FilterEvidence(evidence_type) {
     //Filters the ghosts based on their evidence and the selected.
-    
     let evidence_element = document.querySelector('.evidence_window').querySelector('div').querySelector('.' + evidence_type);
-    console.log(evidence_type);
-    console.log(evidence_element);
+
     //Checks wheter the evidence is selected or not, and changes the background color accordingly.
     // Also adds or removes the evidence from the Evidence_Filter array.    
     if (evidence_element.style.backgroundColor == 'var(--secondary_color)') {
@@ -244,6 +273,11 @@ function FilterEvidence(evidence_type) {
     //Take the filter into effect:
     let ghost_selection = document.querySelector('.ghost_selection');
     for (let ghost of ghost_selection.querySelectorAll('.ghost')) {
+        //If there are no evidence selected, dont give any ghosts the Unfiltered class.
+        if (Evidence_Filter.length == 0) {
+            ghost.classList.remove('Unfiltered');
+            continue;
+        }
         //Go through each ghost, and check how much evidence it has that matches the filter.
         let ghost_name = ghost.querySelector('h4').innerHTML;
         let ghost_info = ghostsInfo[ghost_name];
@@ -258,21 +292,21 @@ function FilterEvidence(evidence_type) {
         }
 
         if (evidence_found >= Evidence_Filter.length && Evidence_Filter.length > 0) {
-            //if the ghost matches the filter (has all the evidence that is selected), show it by the border.
-            ghost.style.border = '5px solid var(--accent_color)';
-            ghost.style.padding = '5px'; //It reduces the padding so that the element won't get bigger.
+            //if the ghost matches the filter (has all the evidence that is selected), remove the unfiltered class.
+            ghost.classList.remove('Unfiltered');
         }
         else {
-            //If the ghost doesn't match the filter, go back to regular styling.
+            //If the ghost doesn't match the filter, give it the Unfiltered class.
+            ghost.classList.add('Unfiltered');
             if (ghostSelection.includes(ghost.querySelector('h4').innerHTML)) {
-                ghost.style.backgroundColor = 'var(--secondary_color)';
-                ghost.style.border = 'none';
-                ghost.style.padding = '10px'; //Reset the padding to normal
+                //if the ghost is selected, keep it's selected class.
+                ghost.classList.add('Selected');
+                ghost.classList.remove('Deselcted');
             }
             else {
-                ghost.style.backgroundColor = 'var(--main_color)';
-                ghost.style.border = 'none';
-                ghost.style.padding = '10px'; //Reset the padding to normal
+                //else remove it's selected class.
+                ghost.classList.remove('Selected');
+                ghost.classList.add('Deselcted');
             }
         }
     }
@@ -290,6 +324,8 @@ function Filter_Selection(mode) {
             evidence.style.backgroundColor = 'var(--main_color)';
         }
         Evidence_Filter = [];
+        FilterEvidence('emf_5'); //Called twice to update the evidence filter.
+        FilterEvidence('emf_5');
     }
 
     else if (mode == 'clear_all') {
@@ -299,20 +335,22 @@ function Filter_Selection(mode) {
         }
 
         for (let ghost of ghost_elements) {
-            ghost.style.backgroundColor = 'var(--main_color)';
-            ghost.style.border = 'none';
-            ghost.style.padding = '10px'; //Reset the padding to normal
+            //clears the ghosts from the selection
+            ghost.classList.remove('Unfiltered');
+            ghost.classList.remove('Selected');
+            ghost.classList.add('Deselcted');
+            //remove the ghost from the selection list
             ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
         }
         Evidence_Filter = [];
     }
 
     else if (mode == 'clear_selection') {
-        //Deselects all ghosts.
+        //Deselects only the ghosts.
         for (let ghost of ghost_elements) {
-            ghost.style.backgroundColor = 'var(--main_color)';
-            ghost.style.border = 'none';
-            ghost.style.padding = '10px'; //Reset the padding to normal
+            ghost.classList.remove('Selected');
+            ghost.classList.add('Deselcted');
+            //remove the ghost from the selection list
             ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
         }
     }
@@ -320,13 +358,17 @@ function Filter_Selection(mode) {
     else if (mode == 'filtered') {
         //Selects all ghosts that match the filter (have a border).
         for (let ghost of ghost_elements) {
-            if (ghost.style.border.length > 1 && ghost.style.border.includes('none') == false) {
-                ghost.style.backgroundColor = 'var(--secondary_color)';
+
+            if (ghost.classList.contains('Unfiltered') == false) {
+                //If the ghost is unfiltered (is not included by the filter) select it.
+                ghost.classList.add('Selected');
+                ghost.classList.remove('Deselcted');
                 ghostSelection.push(ghost.querySelector('h4').innerHTML);
             }
             else {
-                //Deselect it:
-                ghost.style.backgroundColor = 'var(--main_color)';
+                //If the ghost is not filtered doesn't deselect it:
+                ghost.classList.remove('Selected');
+                ghost.classList.add('Deselcted');
                 ghostSelection.splice(ghostSelection.indexOf(ghost.querySelector('h4').innerHTML), 1);
             }
         }
@@ -335,10 +377,9 @@ function Filter_Selection(mode) {
     else if (mode == 'select_all') {
         // selects all ghosts
         for (let ghost of ghost_elements) {
-            ghost.style.backgroundColor = 'var(--secondary_color)';
+            ghost.classList.add('Selected');
+            ghost.classList.remove('Deselcted');
             ghostSelection.push(ghost.querySelector('h4').innerHTML);
-            ghost.style.border = 'none';
-            ghost.style.padding = '10px'; //Reset the padding to normal
         }
     }
 }
@@ -492,6 +533,7 @@ function TranslateEvidence(evidence) {
 }
 
 function spinWheel() {
+    DisableNavButtons();
     document.querySelector('main').removeEventListener("click", spinWheel);
     document.querySelector('nav').classList.add('hidden');
     document.onkeydown = '';
@@ -506,14 +548,14 @@ function spinWheel() {
 
     const wheel = document.querySelector('.wheel');
     if (wheel.classList.contains('spin')) return;
-    var randomDegrees = Math.random() * 360;
-    var Rotation = 3600 + randomDegrees;
-    const WinningDegree = (1.5 * Math.PI) * (180 / Math.PI);
-    var spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
+    let randomDegrees = Math.random() * 360;
+    let Rotation = (0.72) * SpinTime + randomDegrees;
+    const WinningDegree = 270 //Pre calculated from (1.5 * Math.PI) * (180 / Math.PI);
+    let spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
 
     ghostSelection.forEach((ghost) => {
         info = ghostsInfo[ghost];
-        var [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
+        let [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
 
         if (lower > 360) {
             lower -= 360;
@@ -522,7 +564,9 @@ function spinWheel() {
 
         if (lower != undefined) {
             if (WinningDegree > lower && WinningDegree < upper) {
-                document.querySelector('.winning_ghost_text').innerHTML = `The winning ghost is ${ghost}!`;
+                document.querySelector('.winning_ghost_text').innerHTML =
+                    `The winning ghost ${ghost.slice(-1) === 's' ? 'are' : 'is'} ${ghost}!`;
+
 
                 setTimeout(function () {
                     let PopUpElement = document.querySelector('.PopUp');
@@ -557,7 +601,6 @@ function spinWheel() {
                     else {
                         Evidence_Orbs.style.display = 'none';
                     }
-
                 }, spinspeed);
             }
         }
@@ -587,6 +630,7 @@ function HidePopUp() {
                 spinWheel();
             }
         }
+        RestoreNavButtons();
     }, 100);
 }
 
@@ -740,6 +784,7 @@ function SaveSettings() {
         let RootElement = document.documentElement.style;
         if (main_color.toLowerCase() != main_color_picked.toLowerCase()) {
             RootElement.setProperty('--main_color', main_color_picked);
+            RootElement.setProperty('--transparent_main_color', `rgba(${hexToRGB(main_color_picked)}, 0.5)`); //This is for the unfiltered option.
         }
 
         if (secondary_color.toLowerCase() != secondary_color_picked.toLowerCase()) {
@@ -871,7 +916,7 @@ function show_evidence(ghost) {
         evidence_popup.style.display = 'none';
         //Chage the evidence_popup button color to let the user know something here was changed
         let showEvidence_button = document.querySelector('.' + ghost.replaceAll(' ', '_')).querySelector('.evidence_popup');
-        showEvidence_button.style.border = '5px solid var(--secondary_color)'; //Change the borders color to the variable
+        showEvidence_button.style.border = '5px solid let(--secondary_color)'; //Change the borders color to the letiable
         showEvidence_button.style.padding = '5px'; //Reduce the padding size so that the button won't get bigger and move everything.
     }
     cancel_button.onclick = function () {
@@ -879,7 +924,7 @@ function show_evidence(ghost) {
     }
 }
 
-function RevertColor(color){
+function RevertColor(color) {
     //Reverts the color back to the current legit color.
     let RootElement = getComputedStyle(document.documentElement);
     let main_color = RootElement.getPropertyValue('--main_color');
@@ -1034,12 +1079,16 @@ function SaveSetup() {
     localStorage.setItem('pageColors', JSON.stringify(pageColors));
 
     //Show PopUp for 2 seconds to let the user know their settings were saved.
-    let PopUpElement = document.querySelector('.PopUp');
-    let SettingsElement = document.querySelector('.Settings');
-    let WinningGhost_Text = document.querySelector('.winning_ghost_text');
+    const SettingsElement = document.querySelector('.Settings');
+    const PopUpElement = document.querySelector('.PopUp');
+    const WinningGhost_Text = document.querySelector('.winning_ghost_text');
+
+    WinningGhost_Text.parentElement.style.display = 'flex';
     WinningGhost_Text.style.display = 'block';
     WinningGhost_Text.innerHTML = 'Settings saved!';
+
     WinningGhost_Text.parentElement.querySelector('.winning_ghost_evidence').style.display = 'none';
+
     SettingsElement.style.display = 'none';
     PopUpElement.style.display = 'flex';
     PopUpElement.onclick = HidePopUp;
@@ -1077,7 +1126,9 @@ function WriteParameters() {
 }
 
 window.onload = function () {
+    let GoToSelect_Window = false;
     if (document.location.search.length > 2) {
+        //Check if the URL Contains data.
         console.log("Loaded from URL");
         let [data, selection] = ReadParameters();
         ghostsInfo = JSON.parse(data);
@@ -1087,12 +1138,14 @@ window.onload = function () {
         //Attempt to load ghostSelection from storage:
         ghostSelectionText = localStorage.getItem('selection');
         if (typeof (ghostSelectionText) != "string") {
+            // if no data is stored in the storage, load the default ghosts.
             console.log("Loaded new");
             ghostsInfo = loadGhostTypes();
             generateWheel(['Banshee', 'Demon', 'Deogen', 'Goryo', 'Hantu', 'Jinn', 'Mare', 'Moroi', 'Myling', 'Obake', 'Oni', 'Onryo', 'Phantom', 'Poltergeist', 'Raiju', 'Revenant', 'Shade', 'Spirit', 'Thaye', 'The Mimic', 'The Twins', 'Wraith', 'Yokai', 'Yurei']);
+            GoToSelect_Window = true;
         }
         else {
-            //Load the ghostInfo from storage
+            //If there's info in storage, load that.
             let ghostInfoText = localStorage.getItem('data');
             if (typeof (ghostInfoText) != 'string') {
                 ghostsInfo = loadGhostTypes();
@@ -1115,18 +1168,19 @@ window.onload = function () {
     });
 
     document.onkeydown = function (key) {
+        //if spacebar is clickd, spin the wheel
         if (key.key == ' ') {
             spinWheel();
         }
     }
 
     window.onmousemove = function (event) {
-        //For the confirm box inside of the PopUp.
+        //To get the mouse position for smaller windows that need to pop up near the mouse.
         mouseX = event.clientX;
         mouseY = event.clientY;
     }
 
-    //Load colors from storage, if it exits.
+    //Load colors from storage, if they exits.
     let storedColors = localStorage.getItem('pageColors');
     if (typeof (storedColors) == 'string') {
         let parsedColors = JSON.parse(storedColors);
@@ -1145,5 +1199,17 @@ window.onload = function () {
     document.querySelector('.aboutBTN').onclick = about;
     document.querySelector('.resetBTN').onclick = reset;
     document.querySelector('.settingsBTN').onclick = changesettings;
+
     selectGhosts();
+    if (GoToSelect_Window == false) {
+        HideSelectGhosts();
+    }
+
+    document.onclick = function () {
+        //If the user clicks on a button, blur it so that it won't be selected and triggerd later on by the spacebar.
+        const active_Element = document.activeElement;
+        if (active_Element.classList.contains('button')) {
+            active_Element.blur();
+        }
+    }
 };

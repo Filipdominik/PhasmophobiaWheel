@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang='en'>
-
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <!--Include wheel.js-->
-    <script src="wheel.js"></script>
+    <script src="./wheel.js"></script>
 </head>
-
 <body>
     <nav>
         <h1 class="title">Phasmophobia Ghost Casino</h1>
@@ -30,7 +28,9 @@
             <button class="saveBTN button" tabindex="-1" title="Save the current settings" onclick=SaveSetup()>Save
                 setup</button>
             <!-- <button class="shareBTN button" title="Load settings shared by another user" onclick=loadsettings()>Load</button> -->
-            <button class="aboutBTN button" title="About this page (redirect to github.com)" onclick=about()>Help & About</button>
+            <button class="aboutBTN button" tabindex="-1" title="About this page (redirect to github.com)"
+                onclick=about()>Help &
+                About</button>
         </div>
     </nav>
     <main class="triggers_wheel">
@@ -94,7 +94,6 @@
                 </div>
             </div>
         </div>
-        </div>
     </main>
     <div class="PopUp">
         <div class="PopUpContent">
@@ -114,7 +113,7 @@
                         <h3></h3>
                     </div>
                     <div style="display:none;" class="orbs">
-                        <img src="/images/evidence/orbs.webp">
+                        <img src="./images/evidence/orbs.webp">
                         <h3>Ghost Orbs</h3>
                     </div>
                 </div>
@@ -284,5 +283,4 @@
         </div>
     </div>
 </body>
-
 </html>
