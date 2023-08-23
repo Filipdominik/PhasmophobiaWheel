@@ -125,7 +125,7 @@ function generateWheel(ghosts) {
         ctx.save(); //save the canvas state to restore it later on (this saves will reverse all the rotations and translations)
         ctx.fillStyle = ghostInfo['text_color']; //Grab the text color for this ghost.
         ctx.textAlign = 'center';
-        ctx.font = ghosts.length < 10 ? `${fontSize}px Signika Negative` : `${Math.round(fontSize*(2/3))}px Signika Negative`;
+        ctx.font = ghosts.length < 10 ? `${fontSize}px Signika Negative` : `${Math.round(fontSize * (2 / 3))}px Signika Negative`;
         ctx.translate(x, y);
         ctx.rotate(piValueInBetween);
         ctx.fillText(ghostName, 0, 10); //Fill causes the text to be drawn.
@@ -554,7 +554,7 @@ function spinWheel() {
     let spinspeed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spin_speed').replaceAll('s', '000'));
 
     ghostSelection.forEach((ghost) => {
-        info = ghostsInfo[ghost];
+        let info = ghostsInfo[ghost];
         let [lower, upper] = [info['lower_degree'] + randomDegrees, info['upper_degree'] + randomDegrees];
 
         if (lower > 360) {
@@ -585,6 +585,7 @@ function spinWheel() {
                     let [Evidence1Image, Evidence1Text] = Evidence_Div.querySelector('.evidence_1').children;
                     let [Evidence2Image, Evidence2Text] = Evidence_Div.querySelector('.evidence_2').children;
                     let [Evidence3Image, Evidence3Text] = Evidence_Div.querySelector('.evidence_3').children;
+                    console.log(Evidence1, Evidence2, Evidence3, ghost);
 
                     Evidence1Image.src = `./images/evidence/${Evidence1}.webp`;
                     Evidence1Text.innerHTML = TranslateEvidence(Evidence1);
@@ -805,7 +806,7 @@ function SaveSettings() {
         if (SpinTime != TimeSliderElement.value) {
             RootElement.setProperty('--spin_speed', `${TimeSliderElement.value}s`);
         }
-        if (fontSize != FontSliderParent.querySelector('.FontSizeSlider').value){
+        if (fontSize != FontSliderParent.querySelector('.FontSizeSlider').value) {
             RootElement.setProperty('--wheel_font_size', FontSliderParent.querySelector('.FontSizeSlider').value);
         }
 
@@ -898,6 +899,7 @@ function show_evidence(ghost) {
     evidence_select_1.value = Current_Evidence_1;
     evidence_select_2.value = Current_Evidence_2;
     evidence_select_3.value = Current_Evidence_3;
+    console.log(Current_Evidence_1, Current_Evidence_2, Current_Evidence_3);
 
     evidence_1.style.backgroundColor = 'var(--main_color)';
     evidence_2.style.backgroundColor = 'var(--main_color)';
@@ -910,6 +912,7 @@ function show_evidence(ghost) {
 
     evidence_popup.style.display = 'flex';
     let [confirm_button, cancel_button] = document.querySelector('.Confirm_Evidence').children;
+
     confirm_button.onclick = function () {
         let evidence_selection = [evidence_select_1.value, evidence_select_2.value, evidence_select_3.value];
         ghostsInfoTemp[ghost]['evidence'] = evidence_selection;
@@ -919,6 +922,7 @@ function show_evidence(ghost) {
         showEvidence_button.style.border = '5px solid let(--secondary_color)'; //Change the borders color to the letiable
         showEvidence_button.style.padding = '5px'; //Reduce the padding size so that the button won't get bigger and move everything.
     }
+
     cancel_button.onclick = function () {
         evidence_popup.style.display = 'none';
     }
