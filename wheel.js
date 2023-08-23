@@ -1212,4 +1212,14 @@ window.onload = function () {
             active_Element.blur();
         }
     }
+
+    // Check if there is a ghost with the evidence 'fingerprints', and if so reset the page.
+    const illegalEvidence = ['fingerprints'];
+    for (let [ghost, info] of Object.entries(ghostsInfo)) {
+        for (let evidence of illegalEvidence) {
+            if (info['evidence'].includes(evidence)) {
+                reset();
+            }
+        }
+    }
 };
