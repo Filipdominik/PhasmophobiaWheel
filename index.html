@@ -56,9 +56,9 @@
                         <img src="./images/evidence/dots.webp">
                         <h3>D.O.T.S. Projector</h3>
                     </div>
-                    <div class="evidence fingerprints" onclick="FilterEvidence('fingerprints')">
-                        <img src="./images/evidence/fingerprints.webp">
-                        <h3>Fingerprints</h3>
+                    <div class="evidence uv" onclick="FilterEvidence('uv')">
+                        <img src="./images/evidence/uv.webp">
+                        <h3>UV Evidence</h3>
                     </div>
                     <div class="evidence orbs" onclick="FilterEvidence('orbs')">
                         <img src="./images/evidence/orbs.webp">
@@ -135,7 +135,7 @@
                             <img>
                             <select class="evidence_select" onchange="UpdateEvidence(1)">
                                 <option value="emf_5">EMF Level 5</option>
-                                <option value="fingerprints">Fingerprints</option>
+                                <option value="uv">uv</option>
                                 <option value="writing">Ghost Writing</option>
                                 <option value="freezing">Freezing Temperatures</option>
                                 <option value="dots">D.O.T.S. Projector</option>
@@ -147,7 +147,7 @@
                             <img>
                             <select class="evidence_select" onchange="UpdateEvidence(2)">
                                 <option value="emf_5">EMF Level 5</option>
-                                <option value="fingerprints">Fingerprints</option>
+                                <option value="uv">uv</option>
                                 <option value="writing">Ghost Writing</option>
                                 <option value="freezing">Freezing Temperatures</option>
                                 <option value="dots">D.O.T.S. Projector</option>
@@ -159,7 +159,7 @@
                             <img>
                             <select class="evidence_select" onchange="UpdateEvidence(3)">
                                 <option value="emf_5">EMF Level 5</option>
-                                <option value="fingerprints">Fingerprints</option>
+                                <option value="uv">uv</option>
                                 <option value="writing">Ghost Writing</option>
                                 <option value="freezing">Freezing Temperatures</option>
                                 <option value="dots">D.O.T.S. Projector</option>
@@ -269,6 +269,11 @@
                     <!-- Slider input from 1 to 20 seconds -->
                     <input type="range" min="1" max="20" value="4" class="TimeSlider"></input>
                     <p>10s</p>
+                </div>
+                <div class="font_size">
+                    <h3>Change the font size on the wheel</h3>
+                    <input type="range" min="20" max="80" value="50" class="FontSizeSlider"></input>
+                    <p>This is the size example</p>
                 </div>
                 <div class="setting_buttons">
                     <button class="add_ghost button" onclick="add_ghost()">Add Ghost</button>

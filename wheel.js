@@ -44,6 +44,10 @@ function generateWheel(ghosts) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const circleDiameter = Math.round(canvas.width * 2 / 5);
 
+    let RootElement = getComputedStyle(document.documentElement);
+    let fontSize = RootElement.getPropertyValue('--wheel_font_size');
+
+
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
@@ -99,7 +103,7 @@ function generateWheel(ghosts) {
         ctx.save(); //save the canvas state to restore it later on (this saves will reverse all the rotations and translations)
         ctx.fillStyle = ghostInfo['text_color']; //Grab the text color for this ghost.
         ctx.textAlign = 'center';
-        ctx.font = ghosts.length < 10 ? '30px Signika Negative' : '20px Signika Negative';
+        ctx.font = ghosts.length < 10 ? `${fontSize}px Signika Negative` : `${Math.round(fontSize*(2/3))}px Signika Negative`;
         ctx.translate(x, y);
         ctx.rotate(piValueInBetween);
         ctx.fillText(ghostName, 0, 10); //Fill causes the text to be drawn.
@@ -222,8 +226,10 @@ function selectGhosts() {
 
 function FilterEvidence(evidence_type) {
     //Filters the ghosts based on their evidence and the selected.
-
+    
     let evidence_element = document.querySelector('.evidence_window').querySelector('div').querySelector('.' + evidence_type);
+    console.log(evidence_type);
+    console.log(evidence_element);
     //Checks wheter the evidence is selected or not, and changes the background color accordingly.
     // Also adds or removes the evidence from the Evidence_Filter array.    
     if (evidence_element.style.backgroundColor == 'var(--secondary_color)') {
@@ -243,7 +249,7 @@ function FilterEvidence(evidence_type) {
         let ghost_info = ghostsInfo[ghost_name];
         let evidence = ghost_info['evidence'];
         let evidence_found = 0;
-
+        console.log(evidence);
         for (let evidence_type of evidence) {
             //check how much evidence the ghost has that matches the filter.
             if (Evidence_Filter.includes(evidence_type)) {
@@ -366,17 +372,17 @@ function loadGhostTypes() {
         Poltergeist: {
             color: "#00ccff",
             text_color: "#000000",
-            evidence: ["writing", "fingerprints", "spirit_box"]
+            evidence: ["writing", "uv", "spirit_box"]
         },
         Banshee: {
             color: "#6600cc",
             text_color: "#FFFFFF",
-            evidence: ["dots", "orbs", "fingerprints"]
+            evidence: ["dots", "orbs", "uv"]
         },
         Jinn: {
             color: "#ff9900",
             text_color: "#FFFF00",
-            evidence: ["emf_5", "freezing", "fingerprints"]
+            evidence: ["emf_5", "freezing", "uv"]
         },
         Mare: {
             color: "#993333",
@@ -396,7 +402,7 @@ function loadGhostTypes() {
         Demon: {
             color: "#990000",
             text_color: "#FF0000",
-            evidence: ["freezing", "writing", "fingerprints"]
+            evidence: ["freezing", "writing", "uv"]
         },
         Yurei: {
             color: "#9999ff",
@@ -416,17 +422,17 @@ function loadGhostTypes() {
         Hantu: {
             color: "#3399ff",
             text_color: "#FFFFFF",
-            evidence: ["orbs", "freezing", "fingerprints"]
+            evidence: ["orbs", "freezing", "uv"]
         },
         Goryo: {
             color: "#66ff99",
             text_color: "#FFFFFF",
-            evidence: ["dots", "emf_5", "fingerprints"]
+            evidence: ["dots", "emf_5", "uv"]
         },
         Myling: {
             color: "#ccffcc",
             text_color: "#000000",
-            evidence: ["writing", "emf_5", "fingerprints"]
+            evidence: ["writing", "emf_5", "uv"]
         },
         Onryo: {
             color: "#ff3366",
@@ -446,12 +452,12 @@ function loadGhostTypes() {
         Obake: {
             color: "#ffcc99",
             text_color: "#FFFFFF",
-            evidence: ["emf_5", "orbs", "fingerprints"]
+            evidence: ["emf_5", "orbs", "uv"]
         },
         "The Mimic": {
             color: "#9966ff",
             text_color: "#FFFFFF",
-            evidence: ["fingerprints", "freezing", "spirit_box"]
+            evidence: ["uv", "freezing", "spirit_box"]
         },
         Moroi: {
             color: "#cc00cc",
@@ -480,7 +486,7 @@ function TranslateEvidence(evidence) {
     if (evidence == 'writing') return 'Ghost Writing';
     if (evidence == 'emf_5') return 'EMF Level 5';
     if (evidence == 'orbs') return 'Ghost Orbs';
-    if (evidence == 'fingerprints') return 'Fingerprints';
+    if (evidence == 'uv') return 'UV Evidence';
     if (evidence == 'freezing') return 'Freezing Temperatures';
     if (evidence == 'spirit_box') return 'Spirit Box';
 }
@@ -694,6 +700,11 @@ function changesettings() {
     TimeSliderElement.value = parseInt(SpinTime);
     TimeSliderElement.parentElement.querySelector('p').innerHTML = `${TimeSliderElement.value}s`;
 
+    let FontSliderParent = PopUpElement.querySelector('.font_size');
+    let FontSizeSlider = FontSliderParent.querySelector('.FontSizeSlider');
+    FontSizeSlider.oninput = function () {
+        FontSliderParent.querySelector('p').style.fontSize = `${FontSizeSlider.value}px`;
+    }
     ghostsInfoTemp = ghostsInfo;
 }
 
@@ -709,6 +720,7 @@ function SaveSettings() {
     let text_color = RootElement.getPropertyValue('--text_color');
     let background_color = RootElement.getPropertyValue('--background_color');
     let SpinTime = RootElement.getPropertyValue('--spin_speed');
+    let fontSize = RootElement.getPropertyValue('--wheel_font_size');
 
     const confirmElement = document.querySelector('.ConfirmSelectionPopUp');
     confirmElement.querySelector('h3').innerHTML = `Are you sure you want to apply the new settings?`;
@@ -723,6 +735,7 @@ function SaveSettings() {
         let text_color_picked = document.getElementsByClassName('text_color color_picker')[0].value;
         let background_color_picked = document.querySelector('.background_color').value;
         let TimeSliderElement = PopUpContentElement.querySelector('.TimeSlider');
+        let FontSliderParent = PopUpContentElement.querySelector('.font_size');
 
         let RootElement = document.documentElement.style;
         if (main_color.toLowerCase() != main_color_picked.toLowerCase()) {
@@ -746,6 +759,9 @@ function SaveSettings() {
         }
         if (SpinTime != TimeSliderElement.value) {
             RootElement.setProperty('--spin_speed', `${TimeSliderElement.value}s`);
+        }
+        if (fontSize != FontSliderParent.querySelector('.FontSizeSlider').value){
+            RootElement.setProperty('--wheel_font_size', FontSliderParent.querySelector('.FontSizeSlider').value);
         }
 
 

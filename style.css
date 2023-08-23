@@ -11,6 +11,7 @@
     --spin_speed: 5s;
 
     --circle_size: 90vh;
+    --wheel_font_size: 50;
 }
 
 * {
@@ -374,14 +375,26 @@ table {
     padding: 5px;
 }
 
-.SpinSpeed {
+.SpinSpeed{
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
 }
 
-.SpinSpeed>input {
+.SpinSpeed>input{
+    width: 100%;
+    accent-color: var(--accent_color);
+}
+
+.font_size{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.font_size>input {
     width: 100%;
     accent-color: var(--accent_color);
 }
